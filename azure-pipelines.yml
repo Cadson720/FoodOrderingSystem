@@ -12,11 +12,17 @@ pool:
 steps:
 - task: NodeTool@0
   inputs:
-    versionSpec: '10.x'
+    versionSpec: '16.x'
   displayName: 'Install Node.js'
 
 - script: |
     npm install
-    npm build
-    npm run
-  displayName: 'npm install and build'
+    npm run build
+  displayName: 'Install dependencies and build project'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: 'build'  # or your specific output directory
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
