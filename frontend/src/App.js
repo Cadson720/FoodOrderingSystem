@@ -10,7 +10,7 @@ function App() {
           Edit <code>src/App.js</code> and save to reload.
         </p>
         <p>
-          This is the first page for our food ordering system. hi
+          This is the first page for our food ordering system. Hi.
           test
           Bottom Text
         </p>
