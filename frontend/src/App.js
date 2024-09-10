@@ -11,6 +11,7 @@ function App() {
         </p>
         <p>
           This is the first page for our food ordering system
+          test
         </p>
         <a
           className="App-link"
