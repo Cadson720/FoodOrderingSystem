@@ -12,6 +12,7 @@ function App() {
         <p>
           This is the first page for our food ordering system
           test
+          Bottom Text
         </p>
         <a
           className="App-link"
