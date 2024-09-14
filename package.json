@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/Cadson720/FoodOrderingSystem/issues"
   },
-  "homepage": "https://github.com/Cadson720/FoodOrderingSystem#readme"
+  "homepage": "https://github.com/Cadson720/FoodOrderingSystem#readme",
+  "dependencies": {
+    "react-router-dom": "^6.26.2"
+  }
 }
