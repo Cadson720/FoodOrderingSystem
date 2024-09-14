@@ -20,11 +20,11 @@ steps:
     npm run build
   displayName: 'Install dependencies and build project'
 
-#- script: ls -la dist
-#  displayName: 'List output directory contents'
+- script: ls -la dist
+  displayName: 'List output directory contents'
 
-#- task: PublishBuildArtifacts@1
-#  inputs:
-#    PathtoPublish: 'dist'  # Assuming 'dist' is the output directory
-#    ArtifactName: 'drop'
-#    publishLocation: 'Container'
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: 'dist'  # Assuming 'dist' is the output directory
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
