@@ -15,7 +15,7 @@
 
 .App-header {
   background-color: #282c34;
-  min-height: 1vh;
+  min-height: 1vh; /*Don't change this shit pls. Rly pissed me off*/
   display: flex;
   flex-direction: column;
   align-items: center;
