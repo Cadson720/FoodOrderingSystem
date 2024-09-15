@@ -15,7 +15,6 @@ function App() {
                     </nav>
                 </header>
 
-
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/Payment" element={<Payment />} />
