@@ -9,24 +9,22 @@ const port = 3001;
 app.use(cors());
 app.use(bodyParser.json());
 
-// 创建MySQL连接
 const db = mysql.createConnection({
-    host: 'localhost', // 数据库主机
-    user: 'root', // 数据库用户名
-    password: 'crh030417', // 数据库密码
-    database: 'restaurant' // 数据库名称
+    host: 'localhost', // Don't change
+    user: 'root', // Username
+    password: 'crh030417', // Password
+    database: 'restaurant' // Database Name
 });
 
-// 连接到MySQL数据库
 db.connect(err => {
     if (err) {
-        console.error('数据库连接失败: ' + err.stack);
+        console.error('File to connect to database: ' + err.stack);
         return;
     }
-    console.log('成功连接到数据库');
+    console.log('Connected to database');
 });
 
-// API端点：获取菜单项
+// API for table menu
 app.get('/api/menu', (req, res) => {
     const query = 'SELECT * FROM menu';
     db.query(query, (err, results) => {
@@ -38,5 +36,5 @@ app.get('/api/menu', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`服务器正在运行在端口 ${port}`);
+    console.log(`Port ${port}`);
 });

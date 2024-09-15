@@ -1,8 +1,9 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import Payment from './Payment';
-import Inventory from './Inventory';  // 导入新创建的Inventory组件
+import Inventory from './Inventory';
 
 function App() {
     return (
@@ -17,14 +18,13 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/Payment" element={<Payment />} />
-                    <Route path="/Inventory" element={<Inventory />} /> {/* 新增Inventory路由 */}
+                    <Route path="/Inventory" element={<Inventory />} />
                 </Routes>
             </div>
         </Router>
     );
 }
 
-// Home组件，仅包含首页内容
 function Home() {
     return (
         <div>
