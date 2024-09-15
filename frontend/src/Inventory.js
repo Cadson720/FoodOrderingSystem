@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
@@ -33,7 +32,6 @@ function Inventory() {
                     <tr key={item.id}>
                         <td>{item.item_name}</td>
                         <td>{item.description}</td>
-                        {/* 将价格从字符串转换为数字并格式化 */}
                         <td>{parseFloat(item.price).toFixed(2)}</td>
                         <td>{item.category}</td>
                         <td>{item.SOH}</td>
