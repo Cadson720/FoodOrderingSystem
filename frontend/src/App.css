@@ -1,3 +1,5 @@
+/* src/App.css */
+
 .App {
   text-align: center;
 }
@@ -15,7 +17,7 @@
 
 .App-header {
   background-color: #282c34;
-  min-height: 1vh; /*Don't change this shit pls. Rly pissed me off*/
+  min-height: 1vh; /*Don't change this pls*/
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -37,7 +39,6 @@
   }
 }
 
-/* General styles */
 body {
   font-family: 'Arial', sans-serif;
   background-color: #f0f2f5;
@@ -45,6 +46,8 @@ body {
   margin: 0;
   padding: 0;
 }
+
+
 
 .payment-container {
   max-width: 500px;
@@ -152,4 +155,12 @@ body {
 
 .inventory-table tr:hover {
   background-color: #f1f1f1;
+}
+
+.inventory-table td input[type="text"],
+.inventory-table td input[type="number"] {
+  width: 100%;
+  max-width: 150px;
+  padding: 5px;
+  box-sizing: border-box;
 }
