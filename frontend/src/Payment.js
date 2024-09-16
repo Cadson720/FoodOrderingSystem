@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './App.css';
 
 function Payment() {
@@ -8,6 +9,7 @@ function Payment() {
     const [errors, setErrors] = useState({});
     const [validFields, setValidFields] = useState({ cardNumber: false, expiryDate: false, cvv: false });
 
+    // Validate
     const validateForm = () => {
         const newErrors = {};
         const newValidFields = { cardNumber: false, expiryDate: false, cvv: false };
@@ -35,13 +37,26 @@ function Payment() {
         return Object.keys(newErrors).length === 0;
     };
 
+    // Submit function
     const handleSubmit = (event) => {
         event.preventDefault();
         if (validateForm()) {
+            // API
+            axios.post('http://localhost:3001/api/submit-order')
+                .then(response => {
+                    console.log(response.data.message);
+                    alert('Order has been successfully created from cart!');
+                })
+                .catch(error => {
+                    console.error('Error creating order:', error);
+                    alert('An error occurred while creating the order.');
+                });
+
             alert('Payment submitted!');
         }
     };
 
+    //Validate
     useEffect(() => {
         validateForm();
     }, [cardNumber, expiryDate, cvv]);
@@ -58,7 +73,7 @@ function Payment() {
                         id="cardNumber"
                         value={cardNumber}
                         onChange={(e) => setCardNumber(e.target.value)}
-                        placeholder="1234 5678 9012 3456"
+                        placeholder="1234567890123456"
                         className="input-field"
                     />
                     {validFields.cardNumber && <span className="checkmark">&#10003;</span>}
@@ -90,7 +105,11 @@ function Payment() {
                     {validFields.cvv && <span className="checkmark">&#10003;</span>}
                     {errors.cvv && <p className="error-message">{errors.cvv}</p>}
                 </div>
-                <button type="submit" className="submit-button" disabled={!validFields.cardNumber || !validFields.expiryDate || !validFields.cvv}>
+                <button
+                    type="submit"
+                    className="submit-button"
+                    disabled={!validFields.cardNumber || !validFields.expiryDate || !validFields.cvv}
+                >
                     Submit Payment
                 </button>
             </form>

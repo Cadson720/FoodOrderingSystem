@@ -9,7 +9,6 @@ const port = 3001;
 app.use(cors());
 app.use(bodyParser.json());
 
-
 const db = mysql.createConnection({
     host: 'localhost', // Don't change
     user: 'root', // Username
@@ -17,10 +16,9 @@ const db = mysql.createConnection({
     database: 'restaurant' // Database Name
 });
 
-
 db.connect(err => {
     if (err) {
-        console.error('File to connect to database: ' + err.stack);
+        console.error('Failed to connect to database: ' + err.stack);
         return;
     }
     console.log('Connected to database');
@@ -37,7 +35,7 @@ app.get('/api/menu', (req, res) => {
     });
 });
 
-
+// Delete API
 app.delete('/api/menu/:id', (req, res) => {
     const { id } = req.params;
     const query = 'DELETE FROM menu WHERE id = ?';
@@ -50,20 +48,7 @@ app.delete('/api/menu/:id', (req, res) => {
     });
 });
 
-
-app.post('/api/menu', (req, res) => {
-    const { item_name, description, price, category, SOH } = req.body;
-    const query = 'INSERT INTO menu (item_name, description, price, category, SOH) VALUES (?, ?, ?, ?, ?)';
-
-    db.query(query, [item_name, description, price, category, SOH], (err, result) => {
-        if (err) {
-            return res.status(500).send(err);
-        }
-        res.json({ message: 'Item added successfully', id: result.insertId });
-    });
-});
-
-
+// Update API
 app.put('/api/menu/:id', (req, res) => {
     const { id } = req.params;
     const { item_name, description, price, category, SOH } = req.body;
@@ -77,7 +62,34 @@ app.put('/api/menu/:id', (req, res) => {
     });
 });
 
+// Add API
+app.post('/api/menu', (req, res) => {
+    const { item_name, description, price, category, SOH } = req.body;
+    const query = 'INSERT INTO menu (item_name, description, price, category, SOH) VALUES (?, ?, ?, ?, ?)';
+
+    db.query(query, [item_name, description, price, category, SOH], (err, result) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        res.json({ message: 'Item added successfully', id: result.insertId });
+    });
+});
+
+// API to transfer cart data to orderlist
+app.post('/api/submit-order', (req, res) => {
+    const query = `
+        INSERT INTO orderlist (cart_id, menu_id, quantity)
+        SELECT cart_id, menu_id, quantity FROM cart
+    `;
+
+    db.query(query, (err, result) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        res.json({ message: 'Order created successfully from cart', insertedRows: result.affectedRows });
+    });
+});
 
 app.listen(port, () => {
-    console.log(`Port ${port}`);
+    console.log(`Server running on port ${port}`);
 });
