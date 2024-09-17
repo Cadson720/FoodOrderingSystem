@@ -31,3 +31,26 @@ steps:
 
 - script: npx cypress run
   displayName: 'Run Cypress E2E Tests'
+
+    # 安装项目依赖，包括 Cypress
+- script: npm install
+  displayName: 'Install dependencies'
+
+# 缓存 Cypress 二进制文件
+- task: Cache@2
+  inputs:
+    key: 'cypress-linux-$(Agent.OSArchitecture)-$(Build.SourceVersion)'
+    path: ~/.cache/Cypress
+    displayName: 'Cache Cypress binaries'
+
+    # 安装 Cypress 二进制文件
+- script: npx cypress install
+  displayName: 'Install Cypress binary'
+
+    # 运行 Cypress 测试
+- script: npx cypress run
+  displayName: 'Run Cypress E2E Tests'
+
+    # 编译 TypeScript 文件
+- script: tsc -p tsconfig.json
+  displayName: 'Compile TypeScript'
