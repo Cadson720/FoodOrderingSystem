@@ -17,12 +17,12 @@ steps:
       path: $(HOME)/.cache/Cypress
     displayName: 'Cache Cypress binaries'
 
-  # 安装项目依赖，包括 Cypress
+  # 安装项目依赖，包括 Cypress 和 serve
   - script: |
-      npm install
-      npm run build
-    displayName: 'Install dependencies and build project'
-
+      cd frontend  # 进入 frontend 目录
+      npm install  # 安装前端依赖
+      npm run build  # 如果需要构建前端
+    displayName: 'Install dependencies and build project in frontend'
 
   # 安装 Cypress 二进制文件
   - script: npx cypress install
@@ -30,13 +30,21 @@ steps:
 
   # 启动前端服务器，并在后台运行
   - script: |
-      npm start &
+      cd frontend  # 进入 frontend 目录
+      npm start &  # 在后台启动前端服务器
     displayName: 'Start Frontend Server'
 
+  # 使用 wait-on 等待前端服务器启动在端口 3000
+  - script: npx wait-on http://localhost:3000
+    displayName: 'Wait for Frontend Server to be ready'
+
   # 运行 Cypress 测试
-  - script: npx cypress run
+  - script: |
+      cd frontend  # 进入 frontend 目录
+      npx cypress run
     displayName: 'Run Cypress E2E Tests'
 
-  # 编译 TypeScript 文件
-  - script: tsc -p tsconfig.json
+  # 编译 TypeScript 文件（如果适用）
+  - script: |
+      tsc -p tsconfig.json
     displayName: 'Compile TypeScript'
