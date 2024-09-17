@@ -6,6 +6,11 @@
       "esModuleInterop": true,
       "outDir": "./dist"
     },
-    "include": ["src/**/*.ts"],
-    "exclude": ["node_modules"]
+    "include": ["frontend/src/**/*.ts"],
+    "exclude": ["node_modules"],
+
+
+
+
+
   }
