@@ -23,6 +23,9 @@ steps:
       npm run build
     displayName: 'Install dependencies and build project'
 
+  - script: npm install start-server-and-test --save-dev
+    displayName: 'Install start-server-and-test'
+
   # 安装 Cypress 二进制文件
   - script: npx cypress install
     displayName: 'Install Cypress binary'
