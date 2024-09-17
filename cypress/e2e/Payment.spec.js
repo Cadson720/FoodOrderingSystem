@@ -32,6 +32,7 @@ describe('Payment Page Functional Test', () => {
         cy.get('#cardNumber').clear().type('1234567812345678');
         cy.get('.submit-button').should('be.disabled');  // 按钮依然禁用
 
+
         // 输入有效的到期日期
         cy.get('#expiryDate').clear().type('12/24');
         cy.get('.submit-button').should('be.disabled');  // 按钮依然禁用
