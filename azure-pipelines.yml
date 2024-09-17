@@ -27,16 +27,15 @@ steps:
   - script: npx cypress install
     displayName: 'Install Cypress binary'
 
-  # 列出构建输出目录的内容
-  - script: ls -la dist
-    displayName: 'List output directory contents'
+  # 启动前端服务器，并在后台运行
+  - script: |
+      npm start &
+    displayName: 'Start Frontend Server'
 
-  # 发布构建输出为构建工件
-  - task: PublishBuildArtifacts@1
-    inputs:
-      PathtoPublish: 'dist'  # Assuming 'dist' is the output directory
-      ArtifactName: 'drop'
-      publishLocation: 'Container'
+  # 等待服务器启动
+  - script: |
+      sleep 10  # 等待10秒，确保前端服务器已启动
+    displayName: 'Wait for Frontend Server to be ready'
 
   # 运行 Cypress 测试
   - script: npx cypress run
