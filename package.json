@@ -20,5 +20,8 @@
   "homepage": "https://github.com/Cadson720/FoodOrderingSystem#readme",
   "dependencies": {
     "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "cypress": "^13.14.2"
   }
 }
