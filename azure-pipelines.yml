@@ -34,7 +34,7 @@ steps:
 
   # 等待服务器启动
   - script: |
-      sleep 10  # 等待10秒，确保前端服务器已启动
+      sleep 30  # 等待10秒，确保前端服务器已启动
     displayName: 'Wait for Frontend Server to be ready'
 
   # 运行 Cypress 测试
