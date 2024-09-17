@@ -1,56 +1,47 @@
-# Node.js with React
-# Build a Node.js project that uses React.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
-
 trigger:
-- main
+  - main
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '16.x'
-  displayName: 'Install Node.js'
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '16.x'
+    displayName: 'Install Node.js'
 
-- script: |
-    npm install
-    npm run build
-  displayName: 'Install dependencies and build project'
-
-- script: ls -la dist
-  displayName: 'List output directory contents'
-
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: 'dist'  # Assuming 'dist' is the output directory
-    ArtifactName: 'drop'
-    publishLocation: 'Container'
-
-- script: npx cypress run
-  displayName: 'Run Cypress E2E Tests'
-
-    # 安装项目依赖，包括 Cypress
-- script: npm install
-  displayName: 'Install dependencies'
-
-# 缓存 Cypress 二进制文件
-- task: Cache@2
-  inputs:
-    key: 'cypress-linux-$(Agent.OSArchitecture)-$(Build.SourceVersion)'
-    path: ~/.cache/Cypress
+  # 缓存 Cypress 二进制文件
+  - task: Cache@2
+    inputs:
+      key: 'cypress-linux-$(Agent.OSArchitecture)-$(Build.SourceVersion)'
+      path: $(HOME)/.cache/Cypress
     displayName: 'Cache Cypress binaries'
 
-    # 安装 Cypress 二进制文件
-- script: npx cypress install
-  displayName: 'Install Cypress binary'
+  # 安装项目依赖，包括 Cypress
+  - script: |
+      npm install
+      npm run build
+    displayName: 'Install dependencies and build project'
 
-    # 运行 Cypress 测试
-- script: npx cypress run
-  displayName: 'Run Cypress E2E Tests'
+  # 安装 Cypress 二进制文件
+  - script: npx cypress install
+    displayName: 'Install Cypress binary'
 
-    # 编译 TypeScript 文件
-- script: tsc -p tsconfig.json
-  displayName: 'Compile TypeScript'
+  # 列出构建输出目录的内容
+  - script: ls -la dist
+    displayName: 'List output directory contents'
+
+  # 发布构建输出为构建工件
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: 'dist'  # Assuming 'dist' is the output directory
+      ArtifactName: 'drop'
+      publishLocation: 'Container'
+
+  # 运行 Cypress 测试
+  - script: npx cypress run
+    displayName: 'Run Cypress E2E Tests'
+
+  # 编译 TypeScript 文件
+  - script: tsc -p tsconfig.json
+    displayName: 'Compile TypeScript'
