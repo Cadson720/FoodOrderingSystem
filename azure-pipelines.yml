@@ -23,8 +23,6 @@ steps:
       npm run build
     displayName: 'Install dependencies and build project'
 
-  - script: npm install start-server-and-test --save-dev
-    displayName: 'Install start-server-and-test'
 
   # 安装 Cypress 二进制文件
   - script: npx cypress install
@@ -34,11 +32,6 @@ steps:
   - script: |
       npm start &
     displayName: 'Start Frontend Server'
-
-  # 等待服务器启动
-  - script: |
-      sleep 30  # 等待10秒，确保前端服务器已启动
-    displayName: 'Wait for Frontend Server to be ready'
 
   # 运行 Cypress 测试
   - script: npx cypress run
