@@ -1,5 +1,9 @@
-import logo from './logo.svg';
+
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
+import Payment from './Payment';
+import Inventory from './Inventory';
 
 function App() {
   return (
@@ -10,7 +14,7 @@ function App() {
           Edit <code>src/App.js</code> and save to reload.
         </p>
         <p>
-          This is the first page for our food ordering system. Hi.
+          This is the first page for our food ordering system. hi
           test
           Bottom Text
         </p>
