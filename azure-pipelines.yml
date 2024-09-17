@@ -28,3 +28,6 @@ steps:
     PathtoPublish: 'dist'  # Assuming 'dist' is the output directory
     ArtifactName: 'drop'
     publishLocation: 'Container'
+
+- script: npx cypress run
+  displayName: 'Run Cypress E2E Tests'
