@@ -1,7 +1,7 @@
 describe('Payment Page Functional Test', () => {
     beforeEach(() => {
         // 访问支付页面
-        cy.visit('http://localhost:3000/payment');
+        cy.visit('http://localhost:3000/Payment');
     });
 
     it('should validate credit card form and submit payment', () => {
