@@ -19,7 +19,6 @@ const db = mysql.createConnection({
 db.connect(err => {
     if (err) {
         console.error('Failed to connect to database: ' + err.stack);
-        console.error('Failed to connect to database: ' + err.stack);
         return;
     }
     console.log('Connected to database');
@@ -58,7 +57,7 @@ app.delete('/api/menu/:id', (req, res) => {
     });
 });
 
-// Update API
+// API for updating a menu item by ID
 app.put('/api/menu/:id', (req, res) => {
     const { id } = req.params;
     const { item_name, description, price, category, SOH } = req.body;
@@ -72,7 +71,6 @@ app.put('/api/menu/:id', (req, res) => {
     });
 });
 
-// Add API
 // API for adding a new menu item
 app.post('/api/menu', (req, res) => {
     const { item_name, description, price, category, SOH } = req.body;
