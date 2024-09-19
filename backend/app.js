@@ -16,9 +16,9 @@ const db = mysql.createConnection({
     database: 'foodsystem'
 });
 
-
 db.connect(err => {
     if (err) {
+        console.error('Failed to connect to database: ' + err.stack);
         console.error('Failed to connect to database: ' + err.stack);
         return;
     }
@@ -58,6 +58,21 @@ app.delete('/api/menu/:id', (req, res) => {
     });
 });
 
+// Update API
+app.put('/api/menu/:id', (req, res) => {
+    const { id } = req.params;
+    const { item_name, description, price, category, SOH } = req.body;
+    const query = 'UPDATE menu SET item_name = ?, description = ?, price = ?, category = ?, SOH = ? WHERE id = ?';
+
+    db.query(query, [item_name, description, price, category, SOH, id], (err, result) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        res.json({ message: 'Item updated successfully' });
+    });
+});
+
+// Add API
 // API for adding a new menu item
 app.post('/api/menu', (req, res) => {
     const { item_name, description, price, category, SOH } = req.body;
@@ -71,17 +86,24 @@ app.post('/api/menu', (req, res) => {
     });
 });
 
-// API for updating a menu item by ID
+// API to transfer cart data to orderlist
+app.post('/api/submit-order', (req, res) => {
+    const query = `
+        INSERT INTO orderlist (cart_id, menu_id, quantity)
+        SELECT cart_id, menu_id, quantity FROM cart
+    `;
+
+    // API for updating a menu item by ID
 app.put('/api/menu/:id', (req, res) => {
     const { id } = req.params;
     const { item_name, description, price, category, SOH } = req.body;
-    const query = 'UPDATE menu SET item_name = ?, description = ?, price = ?, category = ?, SOH = ? WHERE id = ?';  // Correct fields from the 'menu' table
+    const query = 'UPDATE menu SET item_name = ?, description = ?, price = ?, category = ?, SOH = ? WHERE id = ?';
 
-    db.query(query, [item_name, description, price, category, SOH, id], (err, result) => {
+    db.query(query, (err, result) => {
         if (err) {
             return res.status(500).send(err);
         }
-        res.json({ message: 'Item updated successfully' });
+        res.json({ message: 'Order created successfully from cart', insertedRows: result.affectedRows });
     });
 });
 

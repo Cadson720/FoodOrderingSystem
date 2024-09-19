@@ -23,5 +23,9 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.11.3",
     "react-router-dom": "^6.26.2"
+  },
+  "devDependencies": {
+    "cypress": "^13.14.2",
+    "start-server-and-test": "^2.0.8"
   }
 }
