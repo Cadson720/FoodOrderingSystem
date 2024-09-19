@@ -31,12 +31,11 @@ steps:
       npm run build
     displayName: 'Install dependencies and build project in frontend'
 
-
   - script: |
       cd frontend 
       npm start &
-    displayName: 'Start Frontend Server'
-
+      npx wait-on http://localhost:3000  # 等待前端服务端口准备好
+    displayName: 'Start Frontend Server and wait for readiness'
 
   - script: npx cypress run
     displayName: 'Run Cypress E2E Tests in root directory'
