@@ -20,8 +20,10 @@ steps:
       npm install
     displayName: 'Install dependencies in root directory'
 
-  - script: npx cypress install
-    displayName: 'Install Cypress binary'
+  - script: |
+      npx cypress install
+      chmod +x ./node_modules/.bin/cypress
+    displayName: 'Install Cypress binary and set permissions'
 
   - script: |
       cd frontend
