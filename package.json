@@ -19,6 +19,9 @@
   },
   "homepage": "https://github.com/Cadson720/FoodOrderingSystem#readme",
   "dependencies": {
+    "express": "^4.21.0",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.11.3",
     "react-router-dom": "^6.26.2"
   }
 }

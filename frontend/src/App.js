@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import Payment from './Payment';
 import Inventory from './Inventory';
+import Menu from './Menu';
 
 function App() {
     return (
@@ -11,7 +12,7 @@ function App() {
             <div className="App">
                 <header className="App-header">
                     <nav>
-                        <Link to="/">Home</Link> | <Link to="/Payment">Payment</Link> | <Link to="/Inventory">Inventory</Link> {/* 新增Inventory链接 */}
+                        <Link to="/">Home</Link> | <Link to="/Menu">Menu</Link> | <Link to="/Payment">Payment</Link> | <Link to="/Inventory">Inventory</Link>
                     </nav>
                 </header>
 
@@ -19,6 +20,7 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/Payment" element={<Payment />} />
                     <Route path="/Inventory" element={<Inventory />} />
+                    <Route path="/Menu" element={<Menu />} />
                 </Routes>
             </div>
         </Router>
