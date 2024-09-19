@@ -37,8 +37,6 @@ steps:
       npm start &
     displayName: 'Start Frontend Server'
 
-  - script: npx wait-on http://localhost:3000
-    displayName: 'Wait for Frontend Server to be ready'
 
   - script: npx cypress run
     displayName: 'Run Cypress E2E Tests in root directory'
