@@ -93,12 +93,6 @@ app.post('/api/submit-order', (req, res) => {
         SELECT cart_id, menu_id, quantity FROM cart
     `;
 
-    // API for updating a menu item by ID
-app.put('/api/menu/:id', (req, res) => {
-    const { id } = req.params;
-    const { item_name, description, price, category, SOH } = req.body;
-    const query = 'UPDATE menu SET item_name = ?, description = ?, price = ?, category = ?, SOH = ? WHERE id = ?';
-
     db.query(query, (err, result) => {
         if (err) {
             return res.status(500).send(err);
@@ -107,12 +101,11 @@ app.put('/api/menu/:id', (req, res) => {
     });
 });
 
-// API to transfer cart data to orderlist
-app.post('/api/submit-order', (req, res) => {
-    const query = `
-        INSERT INTO orderlist (cart_id, menu_id, quantity)
-        SELECT cart_id, menu_id, quantity FROM cart
-    `;
+// API for updating a menu item by ID
+app.put('/api/menu/:id', (req, res) => {
+    const { id } = req.params;
+    const { item_name, description, price, category, SOH } = req.body;
+    const query = 'UPDATE menu SET item_name = ?, description = ?, price = ?, category = ?, SOH = ? WHERE id = ?';
 
     db.query(query, (err, result) => {
         if (err) {
