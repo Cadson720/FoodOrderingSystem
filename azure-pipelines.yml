@@ -34,7 +34,7 @@ steps:
   - script: |
       cd frontend 
       npm start &
-      npx wait-on http://localhost:3000  # 等待前端服务端口准备好
+      npx wait-on http://localhost:3000
     displayName: 'Start Frontend Server and wait for readiness'
 
   - script: npx cypress run
