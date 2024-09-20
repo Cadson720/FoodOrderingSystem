@@ -15,6 +15,10 @@ describe('Payment Page Functional Test', () => {
         cy.get('.submit-button').should('be.disabled');
         cy.contains('Credit card number must be 16 digits.').should('be.visible');
 
+        cy.get('#cardNumber').clear().type('1234123412341234');
+        cy.get('.submit-button').should('be.disabled');
+        cy.contains('✓').should('be.visible');
+
         cy.get('#expiryDate').type('13/99');
         cy.get('.submit-button').should('be.disabled');
         cy.contains('Expiry date must be in MM/YY format.').should('be.visible');
