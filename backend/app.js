@@ -9,11 +9,12 @@ const port = 3001;
 app.use(cors());
 app.use(bodyParser.json());
 
+// Connect to DB
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'crh030417',  // Replace with your actual password
-    database: 'restaurant'
+    host: 'localhost', // Don't change
+    user: 'root', // Username
+    password: 'crh030417', // Password
+    database: 'restaurant' // Database Name
 });
 
 db.connect(err => {
@@ -22,20 +23,11 @@ db.connect(err => {
         return;
     }
     console.log('Connected to database');
-
-    // Query the 'menu' table immediately after connection
-    db.query('SELECT * FROM menu', (err, results) => {
-        if (err) {
-            console.error('Failed to query database:', err);
-        } else {
-            console.log('Menu items from database:', results);  // Log the results
-        }
-    });
 });
 
-// API for retrieving all menu items
+// API for table menu
 app.get('/api/menu', (req, res) => {
-    const query = 'SELECT * FROM menu';  // Use the correct 'menu' table
+    const query = 'SELECT * FROM menu';
     db.query(query, (err, results) => {
         if (err) {
             return res.status(500).send(err);
@@ -44,10 +36,10 @@ app.get('/api/menu', (req, res) => {
     });
 });
 
-// API for deleting a menu item by ID
+// Delete API for Inventory
 app.delete('/api/menu/:id', (req, res) => {
     const { id } = req.params;
-    const query = 'DELETE FROM menu WHERE id = ?';  // Use the correct table 'menu' and column 'id'
+    const query = 'DELETE FROM menu WHERE id = ?';
 
     db.query(query, [id], (err, result) => {
         if (err) {
@@ -57,7 +49,7 @@ app.delete('/api/menu/:id', (req, res) => {
     });
 });
 
-// API for updating a menu item by ID
+// Update API for Inventory
 app.put('/api/menu/:id', (req, res) => {
     const { id } = req.params;
     const { item_name, description, price, category, SOH } = req.body;
@@ -71,10 +63,10 @@ app.put('/api/menu/:id', (req, res) => {
     });
 });
 
-// API for adding a new menu item
+// Add API for Inventory
 app.post('/api/menu', (req, res) => {
     const { item_name, description, price, category, SOH } = req.body;
-    const query = 'INSERT INTO menu (item_name, description, price, category, SOH) VALUES (?, ?, ?, ?, ?)';  // Correct fields from the 'menu' table
+    const query = 'INSERT INTO menu (item_name, description, price, category, SOH) VALUES (?, ?, ?, ?, ?)';
 
     db.query(query, [item_name, description, price, category, SOH], (err, result) => {
         if (err) {
@@ -84,36 +76,57 @@ app.post('/api/menu', (req, res) => {
     });
 });
 
-// API to transfer cart data to orderlist
+/// API to transfer cart data to orderlist and update SOH in the menu table
 app.post('/api/submit-order', (req, res) => {
-    const query = `
-        INSERT INTO orderlist (cart_id, menu_id, quantity)
-        SELECT cart_id, menu_id, quantity FROM cart
-    `;
-
-    db.query(query, (err, result) => {
-        if (err) {
-            return res.status(500).send(err);
+    // Start a transaction to ensure data consistency
+    db.beginTransaction((transactionErr) => {
+        if (transactionErr) {
+            return res.status(500).send('Error starting transaction');
         }
-        res.json({ message: 'Order created successfully from cart', insertedRows: result.affectedRows });
+
+        // Insert data from cart into orderlist
+        const insertOrderQuery = `
+            INSERT INTO orderlist (cart_id, menu_id, quantity)
+            SELECT cart_id, menu_id, quantity FROM cart
+        `;
+
+        db.query(insertOrderQuery, (insertErr, result) => {
+            if (insertErr) {
+                return db.rollback(() => {
+                    return res.status(500).send('Error inserting order: ' + insertErr);
+                });
+            }
+
+            // Update SOH in menu table
+            const updateSohQuery = `
+                UPDATE menu
+                SET SOH = SOH - 1
+                WHERE id IN (SELECT menu_id FROM cart)
+                  AND SOH > 0  -- To prevent negative SOH
+            `;
+
+            db.query(updateSohQuery, (updateErr, updateResult) => {
+                if (updateErr) {
+                    return db.rollback(() => {
+                        return res.status(500).send('Error updating SOH: ' + updateErr);
+                    });
+                }
+
+                // Commit the transaction
+                db.commit((commitErr) => {
+                    if (commitErr) {
+                        return db.rollback(() => {
+                            return res.status(500).send('Error committing transaction: ' + commitErr);
+                        });
+                    }
+
+
+                });
+            });
+        });
     });
 });
 
-// API for updating a menu item by ID
-app.put('/api/menu/:id', (req, res) => {
-    const { id } = req.params;
-    const { item_name, description, price, category, SOH } = req.body;
-    const query = 'UPDATE menu SET item_name = ?, description = ?, price = ?, category = ?, SOH = ? WHERE id = ?';
-
-    db.query(query, (err, result) => {
-        if (err) {
-            return res.status(500).send(err);
-        }
-        res.json({ message: 'Order created successfully from cart', insertedRows: result.affectedRows });
-    });
-});
-
-// Start the server
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
