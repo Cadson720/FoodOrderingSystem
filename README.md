@@ -1,1 +1,2 @@
-
+By Raymond: The repository has three parts. The first one is the frontend part, which contains react and npm. The second one is the backend part, which contains node.js and the database setup code. The third one is Cypress, which is used for automatic testing. 
+Raymond is in charge of part of the App.js, most parts of the App.css, index.ts, and all parts of Inventory.js and Payment.js in the front end. In the backend, Raymond is in charge of the payment, inventory, and menu APIs and creates the whole app.js template for everyone to use. For the Cypress test, Raymond did the setup of the Cyrpess, cypress.config.js and Payment.spec.js
