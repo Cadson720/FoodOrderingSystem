@@ -20,7 +20,7 @@ steps:
 
   # 安装项目依赖，包括 Cypress
   - script: |
-      npm install  # 在根目录安装依赖
+      npm install
       npm install
     displayName: 'Install dependencies in root directory'
   # 安装 Cypress 二进制文件
@@ -29,17 +29,17 @@ steps:
 
   # 进入 frontend 目录并安装其依赖
   - script: |
-      cd frontend  # 进入 frontend 目录
-      npm install  # 安装前端依赖
-      npm run build  # 如果需要构建前端
+      cd frontend
+      npm install
+      npm run build  
       cd frontend
       npm install
       npm run build
     displayName: 'Install dependencies and build project in frontend'
   # 启动前端服务器，并在后台运行
   - script: |
-      cd frontend  # 进入 frontend 目录
-      npm start &  # 在后台启动前端服务器
+      cd frontend
+      npm start &
       cd frontend 
       npm start &
     displayName: 'Start Frontend Server'
