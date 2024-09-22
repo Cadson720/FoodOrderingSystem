@@ -5,26 +5,33 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+  # Install Node.js
   - task: NodeTool@0
     inputs:
       versionSpec: '16.x'
     displayName: 'Install Node.js'
 
+  # Cache Cypress binaries to avoid re-downloading them every build
   - task: Cache@2
     inputs:
       key: 'cypress-linux-$(Agent.OSArchitecture)-$(Build.SourceVersion)'
+      restoreKeys: |
+        cypress-linux-$(Agent.OSArchitecture)-
       path: $(HOME)/.cache/Cypress
     displayName: 'Cache Cypress binaries'
 
+  # Install dependencies in root directory
   - script: |
       npm install
     displayName: 'Install dependencies in root directory'
 
+  # Install Cypress binary and set permissions
   - script: |
       npx cypress install
       chmod +x ./node_modules/.bin/cypress
     displayName: 'Install Cypress binary and set permissions'
 
+  # Install frontend dependencies, including wait-on, and build the project
   - script: |
       cd frontend
       npm install
@@ -33,15 +40,20 @@ steps:
       npm run build
     displayName: 'Install dependencies, install wait-on, and build project in frontend'
 
+  # Start frontend server and wait for readiness
   - script: |
       cd frontend 
       npm start &
       npx wait-on http://localhost:3000
     displayName: 'Start Frontend Server and wait for readiness'
 
-  - script: npx cypress run
+  # Run Cypress E2E tests in root directory
+  - script: |
+      npx cypress verify
+      npx cypress run
     displayName: 'Run Cypress E2E Tests in root directory'
 
+  # Compile TypeScript
   - script: |
       tsc -p tsconfig.json
     displayName: 'Compile TypeScript'
