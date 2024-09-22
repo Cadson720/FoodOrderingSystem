@@ -1,58 +1,47 @@
-trigger:
-  - main
-
-pool:
-  vmImage: ubuntu-latest
-
-steps:
-  # Install Node.js
-  - task: NodeTool@0
-    inputs:
       versionSpec: '16.x'
     displayName: 'Install Node.js'
 
-  # Cache Cypress binaries to avoid re-downloading them every build
+  # 缓存 Cypress 二进制文件
   - task: Cache@2
     inputs:
-      key: 'cypress-cache-$(Agent.OSArchitecture)-$(Build.SourceVersion)'
-      restoreKeys: 'cypress-cache-$(Agent.OSArchitecture)-'
+      key: 'cypress-linux-$(Agent.OSArchitecture)-$(Build.SourceVersion)'
       path: $(HOME)/.cache/Cypress
     displayName: 'Cache Cypress binaries'
 
-  # Install dependencies in root directory
+  # 安装项目依赖，包括 Cypress
   - script: |
+      npm install  # 在根目录安装依赖
       npm install
     displayName: 'Install dependencies in root directory'
+  # 安装 Cypress 二进制文件
+  - script: npx cypress install
+    displayName: 'Install Cypress binary'
 
-  # Install Cypress binary and set permissions
+  # 进入 frontend 目录并安装其依赖
   - script: |
-      npx cypress install
-      chmod +x ./node_modules/.bin/cypress
-    displayName: 'Install Cypress binary and set permissions'
-
-  # Install frontend dependencies, including wait-on, and build the project
-  - script: |
+      cd frontend  # 进入 frontend 目录
+      npm install  # 安装前端依赖
+      npm run build  # 如果需要构建前端
       cd frontend
       npm install
-      npm install wait-on
-      chmod +x ./node_modules/.bin/wait-on
       npm run build
-    displayName: 'Install dependencies, install wait-on, and build project in frontend'
-
-  # Start frontend server and wait for readiness
+    displayName: 'Install dependencies and build project in frontend'
+  # 启动前端服务器，并在后台运行
   - script: |
+      cd frontend  # 进入 frontend 目录
+      npm start &  # 在后台启动前端服务器
       cd frontend 
       npm start &
-      npx wait-on http://localhost:3000
-    displayName: 'Start Frontend Server and wait for readiness'
+    displayName: 'Start Frontend Server'
+  # 使用 wait-on 等待前端服务器启动在端口 3000
+  - script: npx wait-on http://localhost:3000
+    displayName: 'Wait for Frontend Server to be ready'
 
-  # Verify and Run Cypress E2E tests in root directory
-  - script: |
-      npx cypress verify
-      npx cypress run
+  # 运行 Cypress 测试（在根目录）
+  - script: npx cypress run
     displayName: 'Run Cypress E2E Tests in root directory'
 
-  # Compile TypeScript
+  # 编译 TypeScript 文件（如果适用）
   - script: |
       tsc -p tsconfig.json
     displayName: 'Compile TypeScript'
