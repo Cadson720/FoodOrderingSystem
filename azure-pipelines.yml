@@ -31,7 +31,7 @@ steps:
       npm install wait-on
       chmod +x ./node_modules/.bin/wait-on
       npm run build
-    displayName: 'Install dependencies, install wait-on and build project in frontend'
+    displayName: 'Install dependencies, install wait-on, and build project in frontend'
 
   - script: |
       cd frontend 
