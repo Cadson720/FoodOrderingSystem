@@ -14,9 +14,8 @@ steps:
   # Cache Cypress binaries to avoid re-downloading them every build
   - task: Cache@2
     inputs:
-      key: 'cypress-linux-$(Agent.OSArchitecture)-$(Build.SourceVersion)'
-      restoreKeys: |
-        cypress-linux-$(Agent.OSArchitecture)-
+      key: 'cypress-cache-$(Agent.OSArchitecture)-$(Build.SourceVersion)'
+      restoreKeys: 'cypress-cache-$(Agent.OSArchitecture)-'
       path: $(HOME)/.cache/Cypress
     displayName: 'Cache Cypress binaries'
 
@@ -47,7 +46,7 @@ steps:
       npx wait-on http://localhost:3000
     displayName: 'Start Frontend Server and wait for readiness'
 
-  # Run Cypress E2E tests in root directory
+  # Verify and Run Cypress E2E tests in root directory
   - script: |
       npx cypress verify
       npx cypress run
