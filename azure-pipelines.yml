@@ -11,38 +11,48 @@ steps:
       versionSpec: '16.x'
     displayName: 'Install Node.js'
 
-  # Cache Cypress binaries
+  # Cache Cypress binaries to avoid re-downloading them every build
   - task: Cache@2
     inputs:
-      key: 'cypress-linux-$(Agent.OSArchitecture)-$(Build.SourceVersion)'
+      key: 'cypress-cache-$(Agent.OSArchitecture)-$(Build.SourceVersion)'
+      restoreKeys: 'cypress-cache-$(Agent.OSArchitecture)-'
       path: $(HOME)/.cache/Cypress
     displayName: 'Cache Cypress binaries'
 
-  # Install dependencies in root directory and Cypress binary
+  # Install dependencies in root directory
   - script: |
       npm install
+    displayName: 'Install dependencies in root directory'
+
+  # Install Cypress binary and set permissions
+  - script: |
       npx cypress install
-    displayName: 'Install dependencies and Cypress binary'
+      chmod +x ./node_modules/.bin/cypress
+    displayName: 'Install Cypress binary and set permissions'
 
-  # Install frontend dependencies and build project
+  # Install frontend dependencies, including wait-on, and build the project
   - script: |
       cd frontend
       npm install
+      npm install wait-on
+      chmod +x ./node_modules/.bin/wait-on
       npm run build
-    displayName: 'Install frontend dependencies and build project'
+    displayName: 'Install dependencies, install wait-on, and build project in frontend'
 
-  # Start frontend server in the background and wait for it to be ready
+  # Start frontend server and wait for readiness
   - script: |
-      cd frontend
+      cd frontend 
       npm start &
       npx wait-on http://localhost:3000
     displayName: 'Start Frontend Server and wait for readiness'
 
-  # Run Cypress E2E tests
-  - script: npx cypress run
-    displayName: 'Run Cypress E2E Tests'
+  # Verify and Run Cypress E2E tests in root directory
+  - script: |
+      npx cypress verify
+      npx cypress run
+    displayName: 'Run Cypress E2E Tests in root directory'
 
-  # Compile TypeScript files (if applicable)
+  # Compile TypeScript
   - script: |
       tsc -p tsconfig.json
     displayName: 'Compile TypeScript'
