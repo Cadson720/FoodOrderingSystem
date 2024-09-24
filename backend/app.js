@@ -7,14 +7,15 @@ const app = express();
 const port = 3001;
 
 app.use(cors());
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
+app.use(express.json());
 
 // Connect to DB
 const db = mysql.createConnection({
     host: 'localhost', // Don't change
     user: 'root', // Username
-    password: 'REDACTED', // Password
-    database: 'FoodSystem' // Database Name
+    password: '435-csqt.L_zJeE', // Password
+    database: 'foodorderingsystem' // Database Name
 });
 
 db.connect(err => {
@@ -36,9 +37,9 @@ app.get('/api/menu', (req, res) => {
     });
 });
 
-app.get('/api/menu/:id', (req, res) => {
-    const { id } = req.params;
-    const query = 'SELECT * FROM menu WHERE id = ?';
+app.get('/api/menu/:item_id', (req, res) => {
+    const { item_id } = req.params;
+    const query = 'SELECT * FROM menu WHERE item_id = ?';
     
     db.query(query, [id], (err, result) => {
         if (err) {
@@ -56,9 +57,9 @@ app.get('/api/menu/:id', (req, res) => {
 
 
 // Delete API for Inventory
-app.delete('/api/menu/:id', (req, res) => {
-    const { id } = req.params;
-    const query = 'DELETE FROM menu WHERE id = ?';
+app.delete('/api/menu/:item_id', (req, res) => {
+    const { item_id } = req.params;
+    const query = 'DELETE FROM menu WHERE item_id = ?';
 
     db.query(query, [id], (err, result) => {
         if (err) {
@@ -69,10 +70,10 @@ app.delete('/api/menu/:id', (req, res) => {
 });
 
 // Update API for Inventory
-app.put('/api/menu/:id', (req, res) => {
-    const { id } = req.params;
+app.put('/api/menu/:item_id', (req, res) => {
+    const { item_id } = req.params;
     const { item_name, description, price, category, SOH } = req.body;
-    const query = 'UPDATE menu SET item_name = ?, description = ?, price = ?, category = ?, SOH = ? WHERE id = ?';
+    const query = 'UPDATE menu SET item_name = ?, description = ?, price = ?, category = ?, SOH = ? WHERE item_id = ?';
 
     db.query(query, [item_name, description, price, category, SOH, id], (err, result) => {
         if (err) {
@@ -106,7 +107,7 @@ app.post('/api/submit-order', (req, res) => {
         // Insert data from cart into orderlist
         const insertOrderQuery = `
             INSERT INTO orderlist (cart_id, menu_id, quantity)
-            SELECT cart_id, menu_id, quantity FROM cart
+            SELECT cart_id, menu_id, quantity FROM orderlist
         `;
 
         db.query(insertOrderQuery, (insertErr, result) => {
@@ -120,7 +121,7 @@ app.post('/api/submit-order', (req, res) => {
             const updateSohQuery = `
                 UPDATE menu
                 SET SOH = SOH - 1
-                WHERE id IN (SELECT menu_id FROM cart)
+                WHERE item_id IN (SELECT menu_id FROM orderlist)
                   AND SOH > 0  -- To prevent negative SOH
             `;
 
@@ -220,6 +221,16 @@ app.put('/api/orderdetail/:id', (req, res) => {
     });
 
     res.json({ message: 'Orders updated successfully' });
+});
+
+app.get('/api/cart', (req, res) => {
+    const query = 'SELECT * FROM cart';
+    db.query(query, (err, results) => {
+        if (err) {
+            return res.status(500);
+        }
+        res.json(results);
+    });
 });
 
 
