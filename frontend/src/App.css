@@ -19,11 +19,12 @@
   background-color: #282c34;
   min-height: 1vh; /*Don't change this pls*/
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  /*flex-direction: column;*/
+  /*align-items: center;*/
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  /*position: relative;*/
 }
 
 .App-link {
@@ -47,7 +48,39 @@ body {
   padding: 0;
 }
 
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
 
+.center-links {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.nav-link {
+  color: #1373ff;
+  font-weight: bold;
+  margin: 0 15px;
+  text-decoration: none;
+  /*text-align: center;*/
+  /*flex: 1;*/
+}
+
+.cart-link {
+  /*background-color: #282c34;*/
+  /*min-height: 1vh; !*Don't change this pls*!*/
+  /*display: flex;*/
+  /*flex-direction: column;*/
+  /*justify-content: right;*/
+  /*font-size: calc(10px + 2vmin);*/
+  /*color: white;*/
+  margin-left: auto;
+  /*text-align: right;*/
+}
 
 .payment-container {
   max-width: 500px;

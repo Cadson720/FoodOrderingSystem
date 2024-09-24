@@ -13,6 +13,7 @@ USE restaurant;
 --     cart_id INT AUTO_INCREMENT PRIMARY KEY,
 --     menu_id INT,
 --     quantity INT NOT NULL,
+--     variant_no INT NOT NULL,
 --     FOREIGN KEY (menu_id) REFERENCES menu(id)
 -- );
 
