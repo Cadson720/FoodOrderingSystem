@@ -13,8 +13,8 @@ app.use(bodyParser.json());
 const db = mysql.createConnection({
     host: 'localhost', // Don't change
     user: 'root', // Username
-    password: 'crh030417', // Password
-    database: 'restaurant' // Database Name
+    password: '1Cricketmad!', // Password
+    database: 'FoodSystem' // Database Name
 });
 
 db.connect(err => {
@@ -35,6 +35,25 @@ app.get('/api/menu', (req, res) => {
         res.json(results);
     });
 });
+
+app.get('/api/menu/:id', (req, res) => {
+    const { id } = req.params;
+    const query = 'SELECT * FROM menu WHERE id = ?';
+    
+    db.query(query, [id], (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'Item not found' });
+        }
+
+        res.json(result[0]);  // Send the item details as a JSON response
+    });
+});
+
 
 // Delete API for Inventory
 app.delete('/api/menu/:id', (req, res) => {

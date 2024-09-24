@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import Payment from './Payment';
 import Inventory from './Inventory';
 import Menu from './Menu';
+import MenuItemDetail from './MenuItemDetail'; // Import the detail page for menu items
 
 function App() {
     return (
@@ -12,7 +12,10 @@ function App() {
             <div className="App">
                 <header className="App-header">
                     <nav>
-                        <Link to="/">Home</Link> | <Link to="/Menu">Menu</Link> | <Link to="/Payment">Payment</Link> | <Link to="/Inventory">Inventory</Link>
+                        <Link to="/">Home</Link> | 
+                        <Link to="/Menu">Menu</Link> | 
+                        <Link to="/Payment">Payment</Link> | 
+                        <Link to="/Inventory">Inventory</Link>
                     </nav>
                 </header>
 
@@ -21,6 +24,8 @@ function App() {
                     <Route path="/Payment" element={<Payment />} />
                     <Route path="/Inventory" element={<Inventory />} />
                     <Route path="/Menu" element={<Menu />} />
+                    {/* New Route for individual Menu Item details */}
+                    <Route path="/menu/:itemId" element={<MenuItemDetail />} />
                 </Routes>
             </div>
         </Router>
@@ -28,11 +33,11 @@ function App() {
 }
 
 function Home() {
-  return (
-      <div>
-        <h1>Home Page Content</h1>
-      </div>
-  );
+    return (
+        <div>
+            <h1>Home Page Content</h1>
+        </div>
+    );
 }
 
 export default App;
