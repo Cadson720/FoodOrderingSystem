@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './styles/Menu.css';  // Link to your CSS
+import './styles/Menu.css';
+import { addToCart } from './cartActions';
+
 
 function Menu() {
+    const user_id = 2460;
     const [menuItems, setMenuItems] = useState([]);
     const [cartItems, setCartItems] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -46,6 +49,12 @@ function Menu() {
         navigate(`/menu/${itemId}`);  // Navigate to the item's detail page
     };
 
+    const handleAddToCart = (item) => {
+        const updatedCart = addToCart(cartItems, item);
+        setCartItems(updatedCart);
+    };
+
+
     return (
         <div className="menu-container">
             <h1>Sydney Burgers</h1>
@@ -66,14 +75,15 @@ function Menu() {
                             {categorizedItems[category].map(item => (
                                 <li key={item.id} className="menu-item">
                                     <button onClick={() => handleItemClick(item.id)} className="menu-item-button">
-                                        <img 
-                                            src={`/images/${item.item_name.toLowerCase().replace(/\s/g, '-')}.jpg`} 
-                                            alt={item.item_name} 
+                                        <img
+                                            src={`/images/${item.item_name.toLowerCase().replace(/\s/g, '-')}.jpg`}
+                                            alt={item.item_name}
                                             className="item-image"
                                         />
-                                        <span className="item-name">{item.item_name}</span> 
+                                        <span className="item-name">{item.item_name}</span>
                                         <span className="item-price">${parseFloat(item.price).toFixed(2)}</span>
                                     </button>
+                                    <button onClick={() => addToCart(item)}>+</button>
                                 </li>
                             ))}
                         </ul>
