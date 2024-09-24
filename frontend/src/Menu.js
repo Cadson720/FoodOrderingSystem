@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';  // Import useNavigate for navigation
+import './styles/Menu.css';  // Link the CSS file
 
 function Menu() {
     const [menuItems, setMenuItems] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');  // To store the search term
+    const [searchTerm, setSearchTerm] = useState('');
+    const navigate = useNavigate();  // Initialize useNavigate
 
     // Fetch menu items when the component loads
     useEffect(() => {
@@ -23,7 +26,7 @@ function Menu() {
 
     // Filter items based on search term
     const filteredItems = menuItems.filter(item =>
-        item.item_name && item.item_name.toLowerCase().includes(searchTerm.toLowerCase())  // Check if item_name exists
+        item.item_name && item.item_name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     // Group and display items by category
@@ -34,6 +37,11 @@ function Menu() {
         Beverage: filteredItems.filter(item => item.category === 'Beverage')
     };
 
+    // Function to handle when an item is clicked
+    const handleItemClick = (itemId) => {
+        navigate(`/menu/${itemId}`);  // Navigate to the item's detail page
+    };
+
     return (
         <div className="menu-container">
             <h1>Sydney Burgers</h1>
@@ -42,52 +50,69 @@ function Menu() {
                 placeholder="Search for items"
                 value={searchTerm}
                 onChange={e => setSearchTerm(e.target.value)}
+                className="menu-search"
             />
 
-            <h2>Pizza</h2>
+            <h2 className="menu-category">Pizza</h2>
             {sortedItems.Pizza.length > 0 ? (
-                <ul>
+                <ul className="menu-items pizza-items">
                     {sortedItems.Pizza.map(item => (
-                        <li key={item.id}>
-                            {item.item_name} - ${parseFloat(item.price).toFixed(2)} <br />
-                            {item.description} (Stock: {item.SOH})
-                        </li>
+                        item.SOH > 0 && (  // Only show items with stock greater than 0
+                            <li key={item.id} className="menu-item">
+                                <button onClick={() => handleItemClick(item.id)} className="menu-item-button">
+                                    <span className="item-name">{item.item_name}</span> - 
+                                    <span className="item-price">${parseFloat(item.price).toFixed(2)}</span>
+                                </button>
+                            </li>
+                        )
                     ))}
                 </ul>
             ) : <p>No pizza available</p>}
 
-            <h2>Salad</h2>
+            <h2 className="menu-category">Salad</h2>
             {sortedItems.Salad.length > 0 ? (
-                <ul>
+                <ul className="menu-items salad-items">
                     {sortedItems.Salad.map(item => (
-                        <li key={item.id}>
-                            {item.item_name} - ${parseFloat(item.price).toFixed(2)} <br />
-                            {item.description} (Stock: {item.SOH})
-                        </li>
+                        item.SOH > 0 && (  // Only show items with stock greater than 0
+                            <li key={item.id} className="menu-item">
+                                <button onClick={() => handleItemClick(item.id)} className="menu-item-button">
+                                    <span className="item-name">{item.item_name}</span> - 
+                                    <span className="item-price">${parseFloat(item.price).toFixed(2)}</span>
+                                </button>
+                            </li>
+                        )
                     ))}
                 </ul>
             ) : <p>No salad available</p>}
 
-            <h2>Dessert</h2>
+            <h2 className="menu-category">Dessert</h2>
             {sortedItems.Dessert.length > 0 ? (
-                <ul>
+                <ul className="menu-items dessert-items">
                     {sortedItems.Dessert.map(item => (
-                        <li key={item.id}>
-                            {item.item_name} - ${parseFloat(item.price).toFixed(2)} <br />
-                            {item.description} (Stock: {item.SOH})
-                        </li>
+                        item.SOH > 0 && (  // Only show items with stock greater than 0
+                            <li key={item.id} className="menu-item">
+                                <button onClick={() => handleItemClick(item.id)} className="menu-item-button">
+                                    <span className="item-name">{item.item_name}</span> - 
+                                    <span className="item-price">${parseFloat(item.price).toFixed(2)}</span>
+                                </button>
+                            </li>
+                        )
                     ))}
                 </ul>
             ) : <p>No dessert available</p>}
 
-            <h2>Beverage</h2>
+            <h2 className="menu-category">Beverage</h2>
             {sortedItems.Beverage.length > 0 ? (
-                <ul>
+                <ul className="menu-items beverage-items">
                     {sortedItems.Beverage.map(item => (
-                        <li key={item.id}>
-                            {item.item_name} - ${parseFloat(item.price).toFixed(2)} <br />
-                            {item.description} (Stock: {item.SOH})
-                        </li>
+                        item.SOH > 0 && (  // Only show items with stock greater than 0
+                            <li key={item.id} className="menu-item">
+                                <button onClick={() => handleItemClick(item.id)} className="menu-item-button">
+                                    <span className="item-name">{item.item_name}</span> - 
+                                    <span className="item-price">${parseFloat(item.price).toFixed(2)}</span>
+                                </button>
+                            </li>
+                        )
                     ))}
                 </ul>
             ) : <p>No beverage available</p>}

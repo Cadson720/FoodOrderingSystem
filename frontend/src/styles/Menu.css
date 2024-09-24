@@ -1,0 +1,77 @@
+/* General menu container styles */
+.menu-container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.menu-search {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+/* Styling for the categories */
+.menu-category {
+    margin-top: 30px;
+    font-size: 24px;
+    color: #333;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 5px;
+}
+
+/* General styling for all menu items */
+.menu-items {
+    list-style-type: none;
+    padding: 0;
+}
+
+.menu-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Style the item name and price */
+.item-name {
+    font-weight: bold;
+}
+
+.item-price {
+    color: #009688;
+}
+
+/* Style the item description */
+.item-description {
+    display: block;
+    font-size: 14px;
+    color: #555;
+}
+
+/* Style the stock level */
+.item-stock {
+    color: #e74c3c;
+}
+
+/* Category-specific item styles */
+.pizza-items .menu-item {
+    background-color: #ffe6e6;
+}
+
+.salad-items .menu-item {
+    background-color: #e6ffe6;
+}
+
+.dessert-items .menu-item {
+    background-color: #fff0e6;
+}
+
+.beverage-items .menu-item {
+    background-color: #e6f7ff;
+}
