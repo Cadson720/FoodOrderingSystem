@@ -5,17 +5,21 @@ import Payment from './Payment';
 import Inventory from './Inventory';
 import Menu from './Menu';
 import MenuItemDetail from './MenuItemDetail'; // Import the detail page for menu items
+import Cart from './Cart';
 
 function App() {
     return (
         <Router>
             <div className="App">
                 <header className="App-header">
-                    <nav>
-                        <Link to="/">Home</Link> | 
-                        <Link to="/Menu">Menu</Link> | 
-                        <Link to="/Payment">Payment</Link> | 
-                        <Link to="/Inventory">Inventory</Link>
+                    <nav className="navbar">
+                        <div className="center-links">
+                            <Link to="/" className="nav-link">Home</Link> |
+                            <Link to="/Menu" className="nav-link">Menu</Link> |
+                            <Link to="/Payment" className="nav-link">Payment</Link> |
+                            <Link to="/Inventory" className="nav-link">Inventory</Link> |
+                        </div>
+                        <Link to="/Cart" className="nav-link cart-link">Cart</Link>
                     </nav>
                 </header>
 
@@ -24,6 +28,7 @@ function App() {
                     <Route path="/Payment" element={<Payment />} />
                     <Route path="/Inventory" element={<Inventory />} />
                     <Route path="/Menu" element={<Menu />} />
+                    <Route path="/Inventory" element={<Cart />} />
                     {/* New Route for individual Menu Item details */}
                     <Route path="/menu/:itemId" element={<MenuItemDetail />} />
                 </Routes>

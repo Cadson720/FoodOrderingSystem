@@ -5,6 +5,7 @@ import './styles/Menu.css';  // Link the CSS file
 
 function Menu() {
     const [menuItems, setMenuItems] = useState([]);
+    const [cartItems, setCartItems] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();  // Initialize useNavigate
 
@@ -41,6 +42,18 @@ function Menu() {
     const handleItemClick = (itemId) => {
         navigate(`/menu/${itemId}`);  // Navigate to the item's detail page
     };
+
+    // Add items to cart
+    const addToCart = (menuItem) => {
+        setCartItems((prevItems) => [...prevItems, menuItem]);  // prevItems = most recent cartItems state
+    }
+
+    // Remove items from cart
+    const removeFromCart = (cartItemId) => {
+        setCartItems((prevItems) =>
+            prevItems.filter((item) => item.id !== cartItemId)
+        );
+    }
 
     return (
         <div className="menu-container">
