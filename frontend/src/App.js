@@ -7,6 +7,8 @@ import Inventory from './Inventory';
 import Menu from './Menu';
 import MenuItemDetail from './MenuItemDetail'; // Import the detail page for menu items
 import Cart from './Cart';
+import Order from './Order';
+import OrderDetail from './OrderDetail';
 
 function App() {
     // Initialize sign-in state from localStorage
@@ -58,6 +60,8 @@ function Home({ setIsSignedIn }) {
                 <Route path="/Inventory" element={<Inventory />} />
                 <Route path="/Menu" element={<Menu />} />
                 <Route path="/Cart" element={<Cart />} />
+                <Route path="/Orders" element={<Order />} />
+                <Route path="/OrderDetail/:orderId/:method" element={<OrderDetail />} />
                 <Route path="/menu/:itemId" element={<MenuItemDetail />} />
             </Routes>
         </div>
