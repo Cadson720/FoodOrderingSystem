@@ -46,7 +46,7 @@ function Order() {
 
   return (
     <div className="inventory-container">
-      <h2>Order</h2>
+      <h2>Order Management</h2>
       <div>
         <label>Date:</label>
         <input type="date" name="createDate" placeholder='Date' value={search.date} onChange={handleInputChange}/>
