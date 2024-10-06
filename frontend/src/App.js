@@ -46,6 +46,7 @@ function Home({ setIsSignedIn }) {
                         <Link to="/" className="nav-link">Home</Link> |
                         <Link to="/Menu" className="nav-link">Menu</Link> |
                         <Link to="/Payment" className="nav-link">Payment</Link> |
+                        <Link to="/Orders" className="nav-link">Order</Link> |
                         <Link to="/Inventory" className="nav-link">Inventory</Link>
                     </div>
                     <Link to="/Cart" className="nav-link cart-link">Cart</Link>
