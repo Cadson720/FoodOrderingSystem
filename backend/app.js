@@ -146,6 +146,83 @@ app.post('/api/submit-order', (req, res) => {
     });
 });
 
+app.get('/api/orderlist', (req, res) => {
+    const query = 'SELECT * FROM orderlist';
+    db.query(query, (err, results) => {
+        if (err) {
+            return res.status(500);
+        }
+        res.json(results);
+    });
+});
+
+app.get('/api/orderdetail/:orderid', (req, res) => {
+    const { orderid } = req.params;
+    const query = 'SELECT * FROM orderdetail LEFT JOIN orderlist ON orderdetail.order_id = orderlist.order_id WHERE orderdetail.order_id = ?';
+    db.query(query, [orderid], (err, results) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        res.json(results);
+    });
+});
+
+app.get('/api/orderdetail/:id', (req, res) => {
+    const { id } = req.params;
+    // orderlist orderdetail
+    const query = 'SELECT * FROM orderdetail LEFT JOIN orderlist ON orderdetail.order_id = orderlist.order_id WHERE orderdetail.item_id = ?';
+    
+    db.query(query, [id], (err, result) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'Item not found' });
+        }
+
+        res.json(result[0]);  // Send the item details as a JSON response
+    });
+});
+
+app.delete('/api/order/:id', (req, res) => {
+    const { id } = req.params;
+    const query_detail = 'DELETE FROM orderdetail WHERE order_id = ?';
+    const query = 'DELETE FROM orderlist WHERE order_id = ?';
+
+    db.query(query_detail, [id], (err, result) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+
+        db.query(query, [id], (err, result) => {
+            if (err) {
+                return res.status(500).send(err);
+            }
+            res.json({ message: 'Item deleted successfully' });
+        });
+    });
+});
+
+app.put('/api/orderdetail/:id', (req, res) => {
+    const { id } = req.params;
+    const { orders } = req.body;
+    
+    orders.forEach(order => {
+        const query = 'UPDATE orderdetail SET shipping_address = ?, instructions = ? WHERE order_id = ?';
+
+        db.query(query, [order.shipping_address, order.instructions, id], (err, result) => {
+            if (err) {
+                return res.status(500)
+            }
+        });
+    });
+
+    res.json({ message: 'Orders updated successfully' });
+});
+
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
