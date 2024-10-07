@@ -50,7 +50,7 @@ steps:
   - script: |
       npx cypress install
       npx cypress verify
-      npx cypress run
+      npx cypress run --headless --browser chrome
     displayName: 'Run Cypress E2E Tests in root directory'
 
   # Compile TypeScript
