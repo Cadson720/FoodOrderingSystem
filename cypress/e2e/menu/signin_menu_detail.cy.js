@@ -1,7 +1,7 @@
 describe('Complete Flow: Signin, Menu, and MenuItemDetail', () => {
     it('should sign in, navigate to menu, and navigate to item detail', () => {
         // Visit the sign-in page
-        cy.visit('/signin');
+        cy.visit('/');
 
         // Input valid email and phone number using the placeholder attribute
         cy.get('input[placeholder="Enter your email"]').type('test@example.com');
@@ -9,6 +9,8 @@ describe('Complete Flow: Signin, Menu, and MenuItemDetail', () => {
 
         // Submit the sign-in form
         cy.get('button[type="submit"]').click();
+
+        cy.wait(2000);
 
         // Wait for the page to navigate to /Menu
         cy.url().should('eq', 'http://localhost:3000/Menu');  // Check for exact URL
