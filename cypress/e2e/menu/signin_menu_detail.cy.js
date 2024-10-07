@@ -1,12 +1,11 @@
 describe('Complete Flow: Signin, Menu, and MenuItemDetail', () => {
-
     it('should sign in, navigate to menu, and navigate to item detail', () => {
         // Visit the sign-in page
         cy.visit('/signin');
 
-        // Input valid email and phone number
-        cy.get('input[name="email"]').type('test@example.com');
-        cy.get('input[name="phone"]').type('1234567890');
+        // Input valid email and phone number using the placeholder attribute
+        cy.get('input[placeholder="Enter your email"]').type('test@example.com');
+        cy.get('input[placeholder="Enter your phone number"]').type('1234567890');
 
         // Submit the sign-in form
         cy.get('button[type="submit"]').click();
