@@ -10,9 +10,8 @@ describe('Complete Flow: Signin, Menu, and MenuItemDetail', () => {
         // Submit the sign-in form
         cy.get('button[type="submit"]').click();
 
-        // Ensure we are redirected to the menu page after login
-        cy.url().should('include', '/Menu');  // Correct case based on your observation
-        cy.get('.menu-object').should('be.visible');
+        // Wait for the page to navigate to /Menu
+        cy.url().should('eq', 'http://localhost:3000/Menu');  // Check for exact URL
 
         // Ensure that menu items are visible
         cy.get('.menu-item').should('have.length.greaterThan', 0);
@@ -21,7 +20,7 @@ describe('Complete Flow: Signin, Menu, and MenuItemDetail', () => {
         cy.get('.menu-item-button').first().click();
 
         // Check if the detail page is loaded
-        cy.url().should('include', '/menu/1');  // Check URL for item detail page
+        cy.url().should('eq', 'http://localhost:3000/menu/1');   // Check URL for item detail page
         cy.get('.menu-item-detail-container').should('be.visible');
 
         // Verify the presence of item details
@@ -31,6 +30,6 @@ describe('Complete Flow: Signin, Menu, and MenuItemDetail', () => {
 
         // Go back to the menu page
         cy.get('.back-button').click();
-        cy.url().should('include', '/Menu');  // Correct case
+        cy.url().should('eq', 'http://localhost:3000/Menu');  // Verify return to menu page
     });
 });
