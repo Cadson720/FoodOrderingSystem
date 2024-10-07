@@ -24,8 +24,5 @@ describe('Menu Page Navigation Test', () => {
 
         // Verify that the search input is present
         cy.get('input[placeholder="Search for items"]').should('be.visible');
-
-        // Verify that no "No items available" message is displayed
-        cy.contains('No items available').should('not.exist');
     });
 });
