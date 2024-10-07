@@ -2,15 +2,18 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import './styles/Menu.css';
-import { addToCart } from './cartActions';
+//import { addToCart } from './cartActions';
 
 
-function Menu() {
-    const user_id = 2460;
+function Menu({ cart, setCart }) {
+    //const user_id = 2460;
     const [menuItems, setMenuItems] = useState([]);
-    const [cartItems, setCartItems] = useState([]);
+    //const [cart, setCart] = useState([]);
+
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();  // Initialize useNavigate
+
+
 
     // Fetch menu items when the component loads
     useEffect(() => {
@@ -49,9 +52,22 @@ function Menu() {
         navigate(`/menu/${itemId}`);  // Navigate to the item's detail page
     };
 
-    const handleAddToCart = (item) => {
-        const updatedCart = addToCart(cartItems, item);
-        setCartItems(updatedCart);
+
+    // Function to add menu items to cart
+    const addToCart = (item) => {
+        const existingItem = cart.find(cartItem => cartItem.id === item.id);
+
+        if (existingItem) {
+            // Update quantity if item already exists in the cart
+            setCart(cart.map(cartItem =>
+                cartItem.id === item.id
+                    ? { ...cartItem, quantity: cartItem.quantity + 1 }
+                    : cartItem
+            ));
+        } else {
+            // Add new item to the cart with quantity 1
+            setCart([...cart, { ...item, quantity: 1 }]);
+        }
     };
 
 
