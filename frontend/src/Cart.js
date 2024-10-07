@@ -45,13 +45,15 @@ function Cart({ cart, setCart }) {
             return;
         }
 
-        axios.post('http://localhost:3001/api/orderlist', { cart })
+        // Submit the cart items as an order to the backend
+        axios.post('http://localhost:3001/api/submit-order', { cart })
             .then(response => {
                 console.log('Order submitted successfully!', response.data);
-                setCart([]);  // Clear cart after order is submitted
+                setCart([]);  // Clear the cart after order submission
+                alert('Order placed successfully!');
             })
             .catch(error => {
-                console.error('There was an error submitting the order!', error);
+                console.error('Error submitting the order:', error);
             });
     };
 
