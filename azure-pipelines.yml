@@ -46,7 +46,7 @@ steps:
       npx wait-on http://localhost:3000
     displayName: 'Start Frontend Server and wait for readiness'
 
-  # Verify and Run Cypress E2E tests in root directory
+  # Verify and Run Cypress E2E tests in headless mode
   - script: |
       npx cypress install
       npx cypress verify
