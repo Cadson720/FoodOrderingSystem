@@ -13,8 +13,8 @@ app.use(bodyParser.json());
 const db = mysql.createConnection({
     host: 'localhost', // Don't change
     user: 'root', // Username
-    password: 'REDACTED', // Password
-    database: 'FoodSystem' // Database Name
+    password: 'crh030417', // Password
+    database: 'restaurant' // Database Name
 });
 
 db.connect(err => {
