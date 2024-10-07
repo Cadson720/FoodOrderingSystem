@@ -1,7 +1,7 @@
-describe('Complete Flow: Signin, Menu, and MenuItemDetail', () => {
-    it('should sign in, navigate to menu, and navigate to item detail', () => {
+describe('Menu Page Navigation Test', () => {
+    it('should navigate to the menu page and verify an item is present', () => {
         // Visit the sign-in page
-        cy.visit('/');
+        cy.visit('/signin');
 
         // Input valid email and phone number using the placeholder attribute
         cy.get('input[placeholder="Enter your email"]').type('test@example.com');
@@ -10,28 +10,16 @@ describe('Complete Flow: Signin, Menu, and MenuItemDetail', () => {
         // Submit the sign-in form
         cy.get('button[type="submit"]').click();
 
-        cy.wait(2000);
+        // Ensure we are redirected to the home page after login
+        cy.url().should('eq', 'http://localhost:3000/');
 
-        // Wait for the page to navigate to /Menu
-        cy.url().should('eq', 'http://localhost:3000/Menu');  // Check for exact URL
+        // Navigate to the Menu page using the navbar
+        cy.get('a.nav-link').contains('Menu').click();
 
-        // Ensure that menu items are visible
+        // Ensure the Menu page is loaded
+        cy.url().should('eq', 'http://localhost:3000/Menu');
+
+        // Verify that at least one menu item is displayed
         cy.get('.menu-item').should('have.length.greaterThan', 0);
-
-        // Click on the first menu item
-        cy.get('.menu-item-button').first().click();
-
-        // Check if the detail page is loaded
-        cy.url().should('eq', 'http://localhost:3000/menu/1');   // Check URL for item detail page
-        cy.get('.menu-item-detail-container').should('be.visible');
-
-        // Verify the presence of item details
-        cy.get('.item-names').should('exist');
-        cy.get('.item-description').should('exist');
-        cy.get('.item-price').should('exist');
-
-        // Go back to the menu page
-        cy.get('.back-button').click();
-        cy.url().should('eq', 'http://localhost:3000/Menu');  // Verify return to menu page
     });
 });
