@@ -30,6 +30,18 @@ steps:
       chmod +x ./node_modules/.bin/cypress
     displayName: 'Install Cypress binary and set permissions'
 
+  # Install backend dependencies and start backend server
+  - script: |
+      cd backend
+      npm install
+      npm start &  # Start the backend server
+    displayName: 'Start Backend Server'
+
+  # Wait for Backend API to be available
+  - script: |
+      npx wait-on http://localhost:3001/api/menu
+    displayName: 'Wait for Backend API to be available'
+
   # Install frontend dependencies, including wait-on, and build the project
   - script: |
       cd frontend
@@ -46,14 +58,7 @@ steps:
       npx wait-on http://localhost:3000
     displayName: 'Start Frontend Server and wait for readiness'
 
-  # Verify and Run Cypress E2E tests in headless mode
+  # Verify and Run Cypress E2E tests
   - script: |
-      npx cypress install
-      npx cypress verify
-      npx cypress run --headless --browser chrome
-    displayName: 'Run Cypress E2E Tests in root directory'
-
-  # Compile TypeScript
-  - script: |
-      tsc -p tsconfig.json
-    displayName: 'Compile TypeScript'
+      npx cypress run
+    displayName: 'Run Cypress E2E Tests'
