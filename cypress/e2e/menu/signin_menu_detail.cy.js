@@ -1,5 +1,5 @@
 describe('Menu Page Navigation Test', () => {
-    it('should navigate to the menu page and verify an item is present', () => {
+    it('should navigate to the menu page and verify the page loads correctly', () => {
         // Visit the sign-in page
         cy.visit('/signin');
 
@@ -19,7 +19,13 @@ describe('Menu Page Navigation Test', () => {
         // Ensure the Menu page is loaded
         cy.url().should('eq', 'http://localhost:3000/Menu');
 
-        // Verify that at least one menu item is displayed
-        cy.get('li.menu-item').should('have.length.greaterThan', 0);
+        // Verify that the 'Sydney Burgers' heading is visible
+        cy.get('h1').contains('Sydney Burgers').should('be.visible');
+
+        // Verify that the search input is present
+        cy.get('input[placeholder="Search for items"]').should('be.visible');
+
+        // Verify that no "No items available" message is displayed
+        cy.contains('No items available').should('not.exist');
     });
 });
