@@ -1,7 +1,7 @@
 /* General menu container styles */
 .menu-container {
     padding: 20px;
-    max-width: 800px;
+    max-width: 1000px;
     margin: 0 auto;
     font-family: Arial, sans-serif;
 }
@@ -9,6 +9,7 @@
 h1 {
     text-align: center;
     margin-bottom: 20px;
+    font-size: 2rem;
 }
 
 .menu-search {
@@ -16,6 +17,8 @@ h1 {
     padding: 10px;
     margin-bottom: 20px;
     font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 /* Styling for the categories */
@@ -31,14 +34,44 @@ h1 {
 .menu-items {
     list-style-type: none;
     padding: 0;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .menu-item {
-    padding: 10px 0;
-    border-bottom: 1px solid #ddd;
+    width: 200px;
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    text-align: center;
+    transition: transform 0.3s ease;
+    cursor: pointer;
 }
 
-/* Style the item name and price */
+.menu-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.menu-item-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: block;
+    text-align: left;
+}
+
+.item-image {
+    width: 100%;
+    height: auto;
+    max-height: 150px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+
 .item-name {
     font-weight: bold;
 }
@@ -47,19 +80,18 @@ h1 {
     color: #009688;
 }
 
-/* Style the item description */
 .item-description {
+    display: none;
+}
+
+.menu-item:hover .item-description {
     display: block;
     font-size: 14px;
     color: #555;
+    margin-top: 10px;
 }
 
-/* Style the stock level */
-.item-stock {
-    color: #e74c3c;
-}
-
-/* Category-specific item styles */
+/* Additional categories can have their unique color schemes */
 .pizza-items .menu-item {
     background-color: #ffe6e6;
 }
