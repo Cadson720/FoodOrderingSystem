@@ -20,6 +20,6 @@ describe('Menu Page Navigation Test', () => {
         cy.url().should('eq', 'http://localhost:3000/Menu');
 
         // Verify that at least one menu item is displayed
-        cy.get('.menu-item').should('have.length.greaterThan', 0);
+        cy.get('li.menu-item').should('have.length.greaterThan', 0);
     });
 });
