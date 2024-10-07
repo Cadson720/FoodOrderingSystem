@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react'; 
 import axios from 'axios';
 
 function Order() {
 
   const [search, setSearch] = useState({});
   const [orders, setOrders] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const fetchOrders = () => {
     axios.get('http://localhost:3001/api/orderlist')
@@ -31,6 +32,15 @@ function Order() {
   };
 
   const handleSearch = () => {
+    // Reset error message
+    setErrorMessage('');
+
+    // Validate if orderId is an integer
+    if (search.orderId && isNaN(parseInt(search.orderId))) {
+      setErrorMessage('Error: Your input type is not an integer');
+      return;
+    }
+
     axios.get('http://localhost:3001/api/orderlist')
       .then(response => {
         setOrders(response.data.filter(order => order.order_id == search.orderId || (
@@ -44,29 +54,39 @@ function Order() {
       });
   };
 
+  const handleReset = () => {
+    // Refresh the page
+    window.location.reload();
+  };
+
   useEffect(() => {
     fetchOrders();
   }, []);
 
   return (
     <div className="inventory-container">
-      <h2>Order management</h2>
+      <h2>Order</h2>
       <div>
         <label>Date:</label>
-        <input type="date" name="createDate" placeholder='Date' value={search.date} onChange={handleInputChange}/>
+        <input type="date" name="createDate" placeholder='Date' value={search.createDate} onChange={handleInputChange}/>
         <label>Id:</label>
         <input type="text" name="orderId" placeholder='OrderId' value={search.orderId} onChange={handleInputChange}/>
         <button onClick={handleSearch}>Search</button>
+        {/* Add the reset button */}
+        <button onClick={handleReset}>Reset</button>
       </div>
+
+      {/* Display error message if invalid input */}
+      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+
       <table className="inventory-table">
         <thead>
-        <tr>
+          <tr>
             <th>Order Id</th>
             <th>User Id</th>
-            <th>status</th>
-            <td>Date</td>
-            
-        </tr>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
         </thead>
         <tbody>
           {
