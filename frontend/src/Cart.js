@@ -8,21 +8,21 @@ function Cart({ cart, setCart }) {
     //const user_id = 2460;
     const [cartItems, setCartItems] = useState([]);
     const [error, setError] = useState(false);
-    const [carts, setCarts] = useState([]);
+    //const [carts, setCarts] = useState([]);
 
     // Calculate total cost of the cart
     const totalCartPrice = cart.reduce((acc, item) => acc + parseFloat(item.price) * item.quantity, 0);
 
 
-    const fetchCarts = () => {
-        axios.get('http://localhost:3001/api/cart')
-            .then(response => {
-                setCarts(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching cart(s):', error);
-            });
-    }
+    // const fetchCarts = () => {
+    //     axios.get('http://localhost:3001/api/cart')
+    //         .then(response => {
+    //             setCarts(response.data);
+    //         })
+    //         .catch(error => {
+    //             console.error('Error fetching cart(s):', error);
+    //         });
+    // }
 
     // Fetch cart items from the backend on component mount
     // useEffect(() => {
@@ -55,14 +55,11 @@ function Cart({ cart, setCart }) {
             });
     };
 
-    const handleAddToCart = (item) => {
-        const updatedCart = addToCart(cartItems, item);
-        setCartItems(updatedCart);
-    };
+    // const handleAddToCart = (item) => {
+    //     const updatedCart = addToCart(cartItems, item);
+    //     setCartItems(updatedCart);
+    // };
 
-    useEffect(() => {
-        fetchCarts();
-    }, []);
 
     return(
         <div className="inventory-container">
@@ -100,7 +97,7 @@ function Cart({ cart, setCart }) {
                     <p>Your cart is empty.</p>
                 ) : (
                     <div>
-                        <table>
+                        <table className="inventory-table">
                             <thead>
                             <tr>
                                 <th>Item</th>
@@ -112,7 +109,7 @@ function Cart({ cart, setCart }) {
                             <tbody>
                             {cart.map((item) => (
                                 <tr key={item.id}>
-                                    <td>{item.name}</td>
+                                    <td>{item.item_name}</td>
                                     <td>${parseFloat(item.price).toFixed(2)}</td>
                                     <td>{item.quantity}</td>
                                     <td>${(parseFloat(item.price) * item.quantity).toFixed(2)}</td>
