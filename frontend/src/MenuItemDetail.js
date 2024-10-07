@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom'; // Added useNavigate for back navigation
+import './styles/MenuItemDetail.css'; // Link the new CSS file
 
 function MenuItemDetail() {
     const { itemId } = useParams();  // Get the item ID from the URL
     const [item, setItem] = useState(null);
+    const navigate = useNavigate(); // For back navigation
 
     useEffect(() => {
         // Fetch the specific menu item by its ID
@@ -17,7 +19,6 @@ function MenuItemDetail() {
                 console.error('Error fetching item:', error);
             });
     }, [itemId]);
-    
 
     if (!item) {
         return <p>Loading...</p>;
@@ -29,17 +30,31 @@ function MenuItemDetail() {
     }
 
     return (
-        <div className="menu-item-detail">
-            <h1>{item.item_name}</h1>
-            <p><strong>Description:</strong> {item.description}</p>
-            <p><strong>Price:</strong> ${parseFloat(item.price).toFixed(2)}</p>
-            <p><strong>Category:</strong> {item.category}</p>
-            <p><strong>Stock Available:</strong> {item.SOH}</p>
-            {item.SOH > 0 ? (
-                <p>This item is available for purchase.</p>
-            ) : (
-                <p>Out of stock.</p>
-            )}
+        <div className="menu-item-detail-container">
+            <div className="menu-item-detail-card">
+                <div className="item-image-wrapper">
+                    {/* Use burger-bg.png as the static image for all menu items */}
+                    <img 
+                        src="/burger-bg.png" 
+                        alt="Menu item" 
+                        className="item-image"
+                    />
+                </div>
+                <div className="item-details">
+                    <h1 className="item-name">{item.item_name}</h1>
+                    <p className="item-description"><strong>Description:</strong> {item.description}</p>
+                    <p className="item-price"><strong>Price:</strong> ${parseFloat(item.price).toFixed(2)}</p>
+                    <p className="item-category"><strong>Category:</strong> {item.category}</p>
+                    <p className="item-stock">
+                        <strong>Stock Available:</strong> {item.SOH > 0 ? (
+                            <span className="in-stock">Available</span>
+                        ) : (
+                            <span className="out-of-stock">Out of stock</span>
+                        )}
+                    </p>
+                    <button className="back-button" onClick={() => navigate(-1)}>Back to Menu</button>
+                </div>
+            </div>
         </div>
     );
 }
