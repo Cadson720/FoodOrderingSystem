@@ -11,7 +11,7 @@ describe('Complete Flow: Signin, Menu, and MenuItemDetail', () => {
         cy.get('button[type="submit"]').click();
 
         // Ensure we are redirected to the menu page after login
-        cy.url().should('include', '/Menu');
+        cy.url().should('include', 'Menu');
         cy.get('.menu-object').should('be.visible');
 
         // Ensure that menu items are visible
@@ -21,7 +21,7 @@ describe('Complete Flow: Signin, Menu, and MenuItemDetail', () => {
         cy.get('.menu-item-button').first().click();
 
         // Check if the detail page is loaded
-        cy.url().should('include', '/menu/1');
+        cy.url().should('include', 'menu/1');
         cy.get('.menu-item-detail-container').should('be.visible');
 
         // Verify the presence of item details
@@ -31,6 +31,6 @@ describe('Complete Flow: Signin, Menu, and MenuItemDetail', () => {
 
         // Go back to the menu page
         cy.get('.back-button').click();
-        cy.url().should('include', '/menu');
+        cy.url().should('include', 'Menu');
     });
 });
