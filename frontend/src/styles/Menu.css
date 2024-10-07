@@ -1,58 +1,127 @@
+/* General page container */
+.page-container {
+    position: relative;
+    height: 100vh;
+    overflow-y: scroll;
+}
+
+/* Dynamic background images */
+.page-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-position: center center; /* Center the image */
+    background-size: contain; /* Ensure image is fully visible */
+    background-repeat: no-repeat; /* Prevent repeating */
+    transition: background-image 0.5s ease-in-out; /* Smooth transition */
+}
+
+.menu-object {
+    background-color:rgba(255, 0, 0, 0.2);
+}
+
 /* General menu container styles */
 .menu-container {
     padding: 20px;
     max-width: 1000px;
     margin: 0 auto;
     font-family: Arial, sans-serif;
+    position: relative;
+    z-index: 1; /* Keep content above the background */
 }
 
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 2rem;
+/* Background image handling */
+.menu-section {
+    position: relative;
+    padding: 20px;
+    margin-bottom: 50px;
+    background: rgba(0, 0, 0, 0.6); /* Opaque black background for the section */
+    border-radius: 10px;
 }
 
-.menu-search {
+.menu-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    height: 100%;
+    z-index: -1;
+    background-size: cover;
+    opacity: 0.3; /* Background image opacity */
+    border-radius: 10px;
 }
 
-/* Styling for the categories */
+/* Pizza section background */
+.pizza-section::before {
+    background-image: url('/public/burger-bg.png'); /* Add your pizza background image */
+    background-size: 50%; /* Scale the image to 50% */
+    background-position: center;
+}
+
+/* Salad section background */
+.salad-section::before {
+    background-image: url('/public/salad-bg.png'); /* Add your salad background image */
+    background-size: 50%; /* Scale the image to 50% */
+    background-position: center;
+}
+
+/* Dessert section background */
+.dessert-section::before {
+    background-image: url('/public/dessert-bg.png'); /* Add your dessert background image */
+    background-size: 50%; /* Scale the image to 50% */
+    background-position: center;
+}
+
+/* Beverage section background */
+.beverage-section::before {
+    background-image: url('/public/beverage-bg.png'); /* Add your beverage background image */
+    background-size: 50%; /* Scale the image to 50% */
+    background-position: center;
+}
+/* Section titles */
 .menu-category {
     margin-top: 30px;
-    font-size: 24px;
-    color: #333;
-    border-bottom: 2px solid #ccc;
-    padding-bottom: 5px;
+    font-size: 28px;
+    color: white;
+    text-transform: uppercase;
+    border-bottom: 3px solid white;
+    padding-bottom: 10px;
+    text-align: center;
+    letter-spacing: 1px;
 }
 
-/* General styling for all menu items */
+/* Styling for menu items */
 .menu-items {
     list-style-type: none;
     padding: 0;
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-around;
 }
 
 .menu-item {
-    width: 200px;
-    padding: 10px;
+    width: 220px;
+    padding: 20px;
     margin: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+    border: 2px solid white;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
     text-align: center;
-    transition: transform 0.3s ease;
+    font-size: 18px; /* Slightly larger text */
+    transition: transform 0.3s ease, background-color 0.3s ease;
     cursor: pointer;
 }
 
 .menu-item:hover {
     transform: scale(1.05);
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .menu-item-button {
@@ -60,50 +129,64 @@ h1 {
     border: none;
     cursor: pointer;
     display: block;
-    text-align: left;
 }
 
 .item-image {
     width: 100%;
-    height: auto;
-    max-height: 150px;
+    height: 150px;
     margin-bottom: 10px;
-    border-radius: 5px;
+    border-radius: 10px;
     object-fit: cover;
 }
 
 .item-name {
     font-weight: bold;
+    font-size: 20px;
+    color: white;
 }
 
 .item-price {
-    color: #009688;
+    color: #ff5555; /* Red price color */
+    font-size: 18px;
 }
 
-.item-description {
-    display: none;
-}
-
+/* Additional details on hover */
 .menu-item:hover .item-description {
     display: block;
-    font-size: 14px;
-    color: #555;
+    font-size: 16px;
+    color: white;
     margin-top: 10px;
 }
 
-/* Additional categories can have their unique color schemes */
+/* Category-specific item styles */
 .pizza-items .menu-item {
-    background-color: #ffe6e6;
+    background-color: rgba(255, 0, 0, 0.2); /* Red-tinted background */
 }
 
 .salad-items .menu-item {
-    background-color: #e6ffe6;
+    background-color: rgba(0, 255, 0, 0.2); /* Green-tinted background */
 }
 
 .dessert-items .menu-item {
-    background-color: #fff0e6;
+    background-color: rgba(255, 182, 193, 0.2); /* Pink-tinted background */
 }
 
 .beverage-items .menu-item {
-    background-color: #e6f7ff;
+    background-color: rgba(0, 0, 255, 0.2); /* Blue-tinted background */
+}
+
+/* Styling for the search bar */
+.menu-search {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 30px;
+    font-size: 18px;
+    border: 2px solid white;
+    background-color: rgba(219, 0, 0, 0.5);
+    color: white;
+    border-radius: 8px;
+}
+
+.menu-search::placeholder {
+    color: rgba(255, 255, 255, 0.6);
 }
