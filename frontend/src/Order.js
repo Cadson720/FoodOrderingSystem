@@ -70,7 +70,7 @@ function Order() {
         <label>Date:</label>
         <input type="date" name="createDate" placeholder='Date' value={search.createDate} onChange={handleInputChange}/>
         <label>Id:</label>
-        <input type="text" name="orderId" placeholder='OrderId' value={search.orderId} onChange={handleInputChange}/>
+        <input type="text" name="orderId" placeholder='OrderId, input number' value={search.orderId} onChange={handleInputChange}/>
         <button onClick={handleSearch}>Search</button>
         {/* Add the reset button */}
         <button onClick={handleReset}>Reset</button>
