@@ -33,7 +33,11 @@ function Order() {
   const handleSearch = () => {
     axios.get('http://localhost:3001/api/orderlist')
       .then(response => {
-        setOrders(response.data.filter(order => order.order_id == search.orderId || order.create_date == search.createDate));
+        setOrders(response.data.filter(order => order.order_id == search.orderId || (
+          new Date(order.create_date).getFullYear() == new Date(search.createDate).getFullYear() 
+          && new Date(order.create_date).getMonth() == new Date(search.createDate).getMonth()
+          && new Date(order.create_date).getDate() == new Date(search.createDate).getDate()
+        )));
       })
       .catch(error => {
         console.error('Error fetching orders:', error);
@@ -46,7 +50,7 @@ function Order() {
 
   return (
     <div className="inventory-container">
-      <h2>Order Management</h2>
+      <h2>Order</h2>
       <div>
         <label>Date:</label>
         <input type="date" name="createDate" placeholder='Date' value={search.date} onChange={handleInputChange}/>
@@ -60,11 +64,10 @@ function Order() {
             <th>Order Id</th>
             <th>Menu Id</th>
             <th>Quantity</th>
-            <th>createDate</th>
+            <th>User Id</th>
             <th>status</th>
-            <th>View</th>
-            <th>Modify</th>
-            <th>Delete</th>
+            <td>Date</td>
+            
         </tr>
         </thead>
         <tbody>
@@ -74,15 +77,16 @@ function Order() {
                 <td>{order.order_id}</td>
                 <td>{order.menu_id}</td>
                 <td>{order.quantity}</td>
-                <td>{order.createDate}</td>
+                <td>{order.userid}</td>
                 <td>{order.status}</td>
+                <td>{order.createDate}</td>
                 <td>
                    <a href={`/orderdetail/${order.order_id}/view`}>View</a>
                 </td>
                 <td>
                   {order.status === 'pending' ? <a href={`/orderdetail/${order.order_id}/edit`}>Edit</a> : ''}
                 </td>
-                <td>{order.status === 'pending' ? <button onClick={() => handleDelete(order.order_id)}>Delete</button> : ''}</td>
+                <td>{order.status === 'pending' ? <button onClick={() => handleDelete(order.order_id)}>Cancel order</button> : ''}</td>
               </tr>
             ))
           }
