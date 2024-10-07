@@ -62,8 +62,6 @@ function Order() {
         <thead>
         <tr>
             <th>Order Id</th>
-            <th>Menu Id</th>
-            <th>Quantity</th>
             <th>User Id</th>
             <th>status</th>
             <td>Date</td>
@@ -75,8 +73,6 @@ function Order() {
             orders.map(order => (
               <tr key={order.order_id}>
                 <td>{order.order_id}</td>
-                <td>{order.menu_id}</td>
-                <td>{order.quantity}</td>
                 <td>{order.userid}</td>
                 <td>{order.status}</td>
                 <td>{order.createDate}</td>
