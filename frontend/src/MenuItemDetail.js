@@ -41,7 +41,7 @@ function MenuItemDetail() {
                     />
                 </div>
                 <div className="item-details">
-                    <h1 className="item-name">{item.item_name}</h1>
+                    <h1 className="item-names">{item.item_name}</h1>
                     <p className="item-description"><strong>Description:</strong> {item.description}</p>
                     <p className="item-price"><strong>Price:</strong> ${parseFloat(item.price).toFixed(2)}</p>
                     <p className="item-category"><strong>Category:</strong> {item.category}</p>
