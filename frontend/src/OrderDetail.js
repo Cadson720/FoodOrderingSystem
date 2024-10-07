@@ -48,7 +48,7 @@ function OrderDetail() {
       <table className="inventory-table">
         <thead>
         <tr>
-            <th>Item Id</th>
+            <th>Menu id</th>
             <th>Price</th>
             <th>Quantity</th>
             <th>Subtotal</th>
@@ -60,7 +60,7 @@ function OrderDetail() {
           {
             orders.map(order => (
               <tr key={order.order_id}>
-                <td>{order.item_id}</td>
+                <td>{order.menu_id}</td>
                 <td>{order.price}</td>
                 <td>{order.quantity}</td>
                 <td>{order.subtotal}</td>
