@@ -6,7 +6,7 @@ describe('Order Management - Invalid Order ID Test', () => {
 
   it('Displays error message for non-integer Order ID input', () => {
     // Enter a non-integer value for Order ID
-    cy.get('input[name="orderId"]').type('abc');
+    cy.get('input[name="orderId"]').type('abc123');
 
     // Click the Search button
     cy.contains('button', 'Search').click();
@@ -15,5 +15,6 @@ describe('Order Management - Invalid Order ID Test', () => {
     cy.get('p').should('contain', 'Error: Your input type is not an integer').and('have.css', 'color', 'rgb(255, 0, 0)');
   });
 });
+
 
   
