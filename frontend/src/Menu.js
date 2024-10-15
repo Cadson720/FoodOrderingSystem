@@ -1,19 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import './styles/Menu.css';
-//import { addToCart } from './cartActions';
-
+import { useNavigate } from 'react-router-dom';  // Import useNavigate for navigation
+import './styles/Menu.css';  // Link the CSS file
 
 function Menu({ cart, setCart }) {
-    //const user_id = 2460;
     const [menuItems, setMenuItems] = useState([]);
-    //const [cart, setCart] = useState([]);
-
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate();  // Initialize useNavigate
-
-
 
     // Fetch menu items when the component loads
     useEffect(() => {
@@ -72,15 +65,16 @@ function Menu({ cart, setCart }) {
 
 
     return (
-        <div className="menu-container">
-            <h1>Sydney Burgers</h1>
-            <input
-                type="text"
-                placeholder="Search for items"
-                value={searchTerm}
-                onChange={e => setSearchTerm(e.target.value)}
-                className="menu-search"
-            />
+        <div className="menu-object">
+            <div className="menu-container">
+                <h1>Sydney Burgers</h1>
+                <input
+                    type="text"
+                    placeholder="Search for items"
+                    value={searchTerm}
+                    onChange={e => setSearchTerm(e.target.value)}
+                    className="menu-search"
+                />
 
             {/* Loop through the categories dynamically */}
             {Object.keys(categorizedItems).length > 0 ? (
@@ -106,6 +100,7 @@ function Menu({ cart, setCart }) {
                     </div>
                 ))
             ) : <p>No items available</p>}
+        </div>
         </div>
     );
 }
