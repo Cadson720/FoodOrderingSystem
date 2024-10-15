@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'; 
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import './order.css';
 
 function Order() {
 
@@ -32,15 +33,6 @@ function Order() {
   };
 
   const handleSearch = () => {
-    // Reset error message
-    setErrorMessage('');
-
-    // Validate if orderId is an integer
-    if (search.orderId && isNaN(parseInt(search.orderId))) {
-      setErrorMessage('Error: Your input type is not an integer');
-      return;
-    }
-
     axios.get('http://localhost:3001/api/orderlist')
       .then(response => {
         setOrders(response.data.filter(order => order.order_id == search.orderId || (
