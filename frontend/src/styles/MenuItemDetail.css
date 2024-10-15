@@ -1,0 +1,106 @@
+/* General page container */
+.menu-item-detail-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color:rgba(255, 0, 0, 0.2);
+    
+}
+
+/* Card-style layout */
+.menu-item-detail-card {
+    display: flex;
+    flex-direction: row;
+    max-width: 900px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+}
+
+.menu-item-detail-card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Image section */
+.item-image-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+.item-image {
+    width: 100%;
+    height: auto;
+    max-width: 400px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+/* Details section */
+.item-details {
+    flex: 2;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.item-names {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.item-description, .item-price, .item-category, .item-stock {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.item-price {
+    color: #e74c3c; /* Highlight price in red */
+}
+
+.item-category {
+    font-style: italic;
+    color: #999;
+}
+
+.item-stock {
+    font-size: 16px;
+}
+
+.in-stock {
+    color: #2ecc71; /* Green for available stock */
+}
+
+.out-of-stock {
+    color: #e74c3c; /* Red for out of stock */
+}
+
+/* Back button styling */
+.back-button {
+    margin-top: 30px;
+    padding: 12px 24px;
+    background-color: #ff5555;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    width: fit-content;
+    align-self: flex-start;
+}
+
+.back-button:hover {
+    background-color: #e74c3c;
+}

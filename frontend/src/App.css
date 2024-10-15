@@ -16,15 +16,16 @@
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 1vh; /*Don't change this pls*/
+  background-color: rgba(40, 44, 52, 0.85); /* Slightly transparent dark header */
+  min-height: 8vh; /* Keep the height consistent */
   display: flex;
-  /*flex-direction: column;*/
-  /*align-items: center;*/
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  align-items: center;
+  justify-content: center; /* Center content horizontally */
+  padding: 0 20px; /* Reduced padding */
   color: white;
-  /*position: relative;*/
+  z-index: 10;
+  position: sticky;
+  top: 0;
 }
 
 .App-link {
@@ -48,38 +49,57 @@ body {
   padding: 0;
 }
 
+/* For the navigation bar inside the header */
 .navbar {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* Center navbar contents */
   width: 100%;
   align-items: center;
+  max-width: 1200px; /* Limit the maximum width */
+  padding: 0 320px; /* Slight padding for spacing */
 }
 
 .center-links {
   display: flex;
   justify-content: center;
-  width: 100%;
+  gap: 20px; /* Add space between nav links */
 }
 
 .nav-link {
-  color: #1373ff;
+  color: #ffffff; /* Make nav links white for contrast */
   font-weight: bold;
   margin: 0 15px;
   text-decoration: none;
-  /*text-align: center;*/
-  /*flex: 1;*/
+  text-transform: uppercase; /* Uppercase for consistency */
+  letter-spacing: 1px;
+  font-size: 1rem;
+}
+
+.nav-link:hover {
+  color: #ff5555; /* Highlight nav links with red on hover */
 }
 
 .cart-link {
-  /*background-color: #282c34;*/
-  /*min-height: 1vh; !*Don't change this pls*!*/
-  /*display: flex;*/
-  /*flex-direction: column;*/
-  /*justify-content: right;*/
-  /*font-size: calc(10px + 2vmin);*/
-  /*color: white;*/
+  color: #ffffff;
+  font-size: 1.1rem;
+  text-decoration: none;
+  padding-right: 10px;
+}
+
+
+.signout-button {
+  background-color: #ff5555;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
   margin-left: auto;
-  /*text-align: right;*/
+}
+
+.signout-button:hover {
+  background-color: #d44444;
 }
 
 .payment-container {
