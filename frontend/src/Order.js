@@ -33,6 +33,16 @@ function Order() {
   };
 
   const handleSearch = () => {
+    // Reset error message
+    setErrorMessage('');
+
+    // Validate if orderId contains only numbers (integer)
+    const orderId = search.orderId;
+    if (orderId && !/^\d+$/.test(orderId)) {
+      setErrorMessage('Error: Your input type is not an integer');
+      return;
+    }
+
     axios.get('http://localhost:3001/api/orderlist')
       .then(response => {
         setOrders(response.data.filter(order => order.order_id == search.orderId || (
