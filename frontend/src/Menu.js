@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';  // Import useNavigate for navigation
 import './styles/Menu.css';  // Link the CSS file
 
-function Menu() {
+function Menu({ cart, setCart }) {
     const [menuItems, setMenuItems] = useState([]);
     const [cartItems, setCartItems] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -46,6 +46,25 @@ function Menu() {
         navigate(`/menu/${itemId}`);  // Navigate to the item's detail page
     };
 
+
+    // Function to add menu items to cart
+    const addToCart = (item) => {
+        const existingItem = cart.find(cartItem => cartItem.id === item.id);
+
+        if (existingItem) {
+            // Update quantity if item already exists in the cart
+            setCart(cart.map(cartItem =>
+                cartItem.id === item.id
+                    ? { ...cartItem, quantity: cartItem.quantity + 1 }
+                    : cartItem
+            ));
+        } else {
+            // Add new item to the cart with quantity 1
+            setCart([...cart, { ...item, quantity: 1 }]);
+        }
+    };
+
+
     return (
         <div className="menu-object">
             <div className="menu-container">
@@ -67,14 +86,15 @@ function Menu() {
                                 {categorizedItems[category].map(item => (
                                     <li key={item.id} className="menu-item">
                                         <button onClick={() => handleItemClick(item.id)} className="menu-item-button">
-                                            <img 
-                                                src={`/images/${item.item_name.toLowerCase().replace(/\s/g, '-')}.jpg`} 
-                                                alt={item.item_name} 
+                                            <img
+                                                src={`/images/${item.item_name.toLowerCase().replace(/\s/g, '-')}.jpg`}
+                                                alt={item.item_name}
                                                 className="item-image"
                                             />
-                                            <span className="item-name">{item.item_name}</span> 
+                                            <span className="item-name">{item.item_name}</span>
                                             <span className="item-price">${parseFloat(item.price).toFixed(2)}</span>
                                         </button>
+                                        <button onClick={() => addToCart(item)}>+</button>
                                     </li>
                                 ))}
                             </ul>
