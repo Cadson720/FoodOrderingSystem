@@ -73,3 +73,4 @@ steps:
       artifactName: 'frontend-drop'  # Name of the artifact
       publishLocation: 'Container'  # Store artifact in the container
     displayName: 'Publish Build Artifacts'
+
