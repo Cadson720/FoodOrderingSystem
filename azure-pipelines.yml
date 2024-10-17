@@ -60,17 +60,17 @@ steps:
       tsc -p tsconfig.json
     displayName: 'Compile TypeScript'
 
-  # Step 9: Copy frontend build files to the artifact staging directory
+  # Step 9: Package frontend build files into a .zip file for deployment
   - script: |
       mkdir -p $(Build.ArtifactStagingDirectory)/frontend
-      cp -r frontend/build/* $(Build.ArtifactStagingDirectory)/frontend/
-    displayName: 'Copy frontend build files to artifact staging directory'
+      cd frontend/build
+      zip -r $(Build.ArtifactStagingDirectory)/frontend.zip .
+    displayName: 'Package frontend build files into a zip file'
 
-  # Step 10: Publish the build artifacts for use in Release Pipeline
+  # Step 10: Publish the .zip artifact for use in Release Pipeline
   - task: PublishBuildArtifacts@1
     inputs:
-      pathToPublish: $(Build.ArtifactStagingDirectory)  # Path to artifact staging directory
+      pathToPublish: $(Build.ArtifactStagingDirectory)/frontend.zip  # Path to the .zip file
       artifactName: 'frontend-drop'  # Name of the artifact
       publishLocation: 'Container'  # Store artifact in the container
     displayName: 'Publish Build Artifacts'
-
