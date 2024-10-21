@@ -28,8 +28,11 @@ function App() {
                     {/* Route to SignIn page */}
                     <Route path="/signin" element={<SignIn setIsSignedIn={setIsSignedIn} />} />
 
-                    {/* Protect the home page and other components */}
-                    <Route path="/*" element={isSignedIn ? <Home setIsSignedIn={setIsSignedIn} /> : <Navigate to="/signin" />} />
+                    {/*
+                        Removed forced redirection to SignIn.
+                        Set the default route to '/Menu' directly.
+                    */}
+                    <Route path="/*" element={<Home setIsSignedIn={setIsSignedIn} />} />
                 </Routes>
             </div>
         </Router>
@@ -37,7 +40,6 @@ function App() {
 }
 
 function Home({ setIsSignedIn }) {
-
     const [cart, setCart] = useState([]); // cart is an array that holds the items added to the cart
     console.log("Cart is:", cart);
 
@@ -60,11 +62,9 @@ function Home({ setIsSignedIn }) {
 
             {/* Nested Routes within Home */}
             <Routes>
-                <Route path="/" element={<h1>Welcome to the Home Page</h1>} />
+                <Route path="/" element={<Navigate to="/Menu" />} /> {/* Redirect Home to Menu */}
                 <Route path="/Payment" element={<Payment />} />
                 <Route path="/Inventory" element={<Inventory />} />
-                {/*<Route path="/Menu" element={<Menu />} />*/}
-                {/*<Route path="/Cart" element={<Cart />} />*/}
                 <Route path="/Orders" element={<Order />} />
                 <Route path="/OrderDetail/:orderId/:method" element={<OrderDetail />} />
                 <Route path="/menu/:itemId" element={<MenuItemDetail />} />
@@ -72,7 +72,6 @@ function Home({ setIsSignedIn }) {
                 {/* Pass the cart and setCart to both Menu and Cart components */}
                 <Route path="/Menu" element={<Menu cart={cart} setCart={setCart} />} />
                 <Route path="/Cart" element={<Cart cart={cart} setCart={setCart} />} />
-                <Route path="/" element={<Menu cart={cart} setCart={setCart} />} />
             </Routes>
         </div>
     );

@@ -4,15 +4,15 @@ describe('Payment Page Functional Test', () => {
             return false;
         });
 
-        cy.session('login', () => {
-            // Use email and phone number to login
-            cy.visit('http://localhost:3000/signin');
-            cy.get('input[placeholder="Enter your email"]').type('test@example.com');
-            cy.get('input[placeholder="Enter your phone number"]').type('1234567890');
-            cy.get('.signin-button').click();
-
-            cy.url().should('not.include', '/signin');
-        });
+        // cy.session('login', () => {
+        //     // Use email and phone number to login
+        //     cy.visit('http://localhost:3000/signin');
+        //     cy.get('input[placeholder="Enter your email"]').type('test@example.com');
+        //     cy.get('input[placeholder="Enter your phone number"]').type('1234567890');
+        //     cy.get('.signin-button').click();
+        //
+        //     cy.url().should('not.include', '/signin');
+        // });
 
         // Payment Page
         cy.visit('http://localhost:3000/payment');

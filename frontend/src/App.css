@@ -210,10 +210,26 @@ body {
   background-color: #f1f1f1;
 }
 
+/* Make all input fields uniform */
 .inventory-table td input[type="text"],
 .inventory-table td input[type="number"] {
   width: 100%;
   max-width: 150px;
   padding: 5px;
   box-sizing: border-box;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
+
+/* Remove default styles of number input */
+.inventory-table td input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
+.inventory-table td input[type="number"]::-webkit-outer-spin-button,
+.inventory-table td input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none; /* Chrome, Safari, Edge, Opera */
+  margin: 0;
+}
+

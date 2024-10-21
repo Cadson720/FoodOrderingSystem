@@ -16,10 +16,10 @@ app.use(bodyParser.json());
 
 // Connect to DB
 const db = mysql.createConnection({
-    host: process.env.DB_HOST, // Use environment variables
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
+    host: 'localhost', // Don't change
+    user: 'root', // Username
+    password: 'crh030417', // Password
+    database: 'restaurant' // Database Name
 });
 
 db.connect(err => {
