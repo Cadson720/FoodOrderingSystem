@@ -21,6 +21,7 @@ function App() {
         localStorage.setItem('isSignedIn', isSignedIn);
     }, [isSignedIn]);
 
+
     return (
         <Router>
             <div className="App">
