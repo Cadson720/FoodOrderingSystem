@@ -1,20 +1,25 @@
+// backend/app.js
+require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const emailRoutes = require('./email'); // Import the email routes
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000', // Adjust based on your frontend's URL
+}));
 app.use(bodyParser.json());
 
 // Connect to DB
 const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '1Cricketmad!',  // Replace with your actual password
-    database: 'foodsystem'
+    host: process.env.DB_HOST, // Use environment variables
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME,
 });
 
 db.connect(err => {
@@ -24,6 +29,9 @@ db.connect(err => {
     }
     console.log('Connected to database');
 });
+
+// Use the email routes
+app.use('/api/email', emailRoutes);
 
 // API for table menu
 app.get('/api/menu', (req, res) => {

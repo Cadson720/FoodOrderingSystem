@@ -1,17 +1,19 @@
 trigger:
-  - main
+  branches:
+    include:
+      - main  # Trigger the pipeline only on changes to the 'main' branch
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
-  # Install Node.js
+  # Step 1: Install Node.js
   - task: NodeTool@0
     inputs:
       versionSpec: '16.x'
     displayName: 'Install Node.js'
 
-  # Cache Cypress binaries to avoid re-downloading them every build
+  # Step 2: Cache Cypress binaries to avoid re-downloading them for every build
   - task: Cache@2
     inputs:
       key: 'cypress-cache-$(Agent.OSArchitecture)-$(Build.SourceVersion)'
@@ -19,41 +21,57 @@ steps:
       path: $(HOME)/.cache/Cypress
     displayName: 'Cache Cypress binaries'
 
-  # Install dependencies in root directory
+  # Step 3: Install dependencies in the root directory
   - script: |
       npm install
     displayName: 'Install dependencies in root directory'
 
-  # Install Cypress binary and set permissions
+  # Step 4: Install Cypress binary and set execution permissions
   - script: |
       npx cypress install
       chmod +x ./node_modules/.bin/cypress
     displayName: 'Install Cypress binary and set permissions'
 
-  # Install frontend dependencies, including wait-on, and build the project
+  # Step 5: Install frontend dependencies, build the frontend project, and install wait-on
   - script: |
       cd frontend
       npm install
       npm install wait-on
       chmod +x ./node_modules/.bin/wait-on
       npm run build
-    displayName: 'Install dependencies, install wait-on, and build project in frontend'
+    displayName: 'Install frontend dependencies, install wait-on, and build project'
 
-  # Start frontend server and wait for readiness
+  # Step 6: Start the frontend server and wait for it to be ready
   - script: |
-      cd frontend 
+      cd frontend
       npm start &
       npx wait-on http://localhost:3000
     displayName: 'Start Frontend Server and wait for readiness'
 
-  # Verify and Run Cypress E2E tests in headless mode
+  # Step 7: Run Cypress E2E tests in headless mode using Chrome browser
   - script: |
       npx cypress install
       npx cypress verify
       npx cypress run --headless --browser chrome
-    displayName: 'Run Cypress E2E Tests in root directory'
+    displayName: 'Run Cypress E2E Tests'
 
-  # Compile TypeScript
+  # Step 8: Compile TypeScript files using the tsconfig.json configuration
   - script: |
       tsc -p tsconfig.json
     displayName: 'Compile TypeScript'
+
+  # Step 9: Package frontend build files into a .zip file for deployment
+  - script: |
+      mkdir -p $(Build.ArtifactStagingDirectory)/frontend
+      cd frontend/build
+      zip -r $(Build.ArtifactStagingDirectory)/frontend.zip .
+    displayName: 'Package frontend build files into a zip file'
+
+  # Step 10: Publish the .zip artifact for use in Release Pipeline
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: $(Build.ArtifactStagingDirectory)/frontend.zip  # Path to the .zip file
+      artifactName: 'frontend-drop'  # Name of the artifact
+      publishLocation: 'Container'  # Store artifact in the container
+    displayName: 'Publish Build Artifacts'
+
