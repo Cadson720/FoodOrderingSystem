@@ -105,13 +105,18 @@ app.post('/api/menu', (req, res) => {
 
 /// API to transfer cart data to orderlist and update SOH in the menu table
 app.post('/api/submit-order', (req, res) => {
-    // Start a transaction to ensure data consistency
+    // Immediately send response back to frontend with the message
+    res.json({
+        message: 'Order has been submitted. Please enter your payment detail at the next page.'
+    });
+
+    // Continue with the transaction to handle the order submission
     db.beginTransaction((transactionErr) => {
         if (transactionErr) {
-            return res.status(500).send('Error starting transaction');
+            console.error('Error starting transaction:', transactionErr);
+            return;
         }
 
-        // Insert data from cart into orderlist
         const insertOrderQuery = `
             INSERT INTO orderlist (cart_id, menu_id, quantity)
             SELECT cart_id, menu_id, quantity FROM cart
@@ -119,12 +124,12 @@ app.post('/api/submit-order', (req, res) => {
 
         db.query(insertOrderQuery, (insertErr, result) => {
             if (insertErr) {
+                console.error('Error inserting order:', insertErr);
                 return db.rollback(() => {
-                    return res.status(500).send('Error inserting order: ' + insertErr);
+                    console.error('Transaction rollback due to order insert error');
                 });
             }
 
-            // Update SOH in menu table
             const updateSohQuery = `
                 UPDATE menu
                 SET SOH = SOH - 1
@@ -134,25 +139,26 @@ app.post('/api/submit-order', (req, res) => {
 
             db.query(updateSohQuery, (updateErr, updateResult) => {
                 if (updateErr) {
+                    console.error('Error updating SOH:', updateErr);
                     return db.rollback(() => {
-                        return res.status(500).send('Error updating SOH: ' + updateErr);
+                        console.error('Transaction rollback due to SOH update error');
                     });
                 }
 
-                // Commit the transaction
                 db.commit((commitErr) => {
                     if (commitErr) {
+                        console.error('Error committing transaction:', commitErr);
                         return db.rollback(() => {
-                            return res.status(500).send('Error committing transaction: ' + commitErr);
+                            console.error('Transaction rollback due to commit error');
                         });
                     }
-
-
+                    console.log('Order submitted and SOH updated successfully');
                 });
             });
         });
     });
 });
+
 
 app.get('/api/orderlist', (req, res) => {
     const query = 'SELECT * FROM orderlist';
