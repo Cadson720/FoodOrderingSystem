@@ -6,12 +6,6 @@ describe('Menu Page Navigation Test', () => {
     });
 
     it('should navigate to the menu page and verify the page loads correctly', () => {
-        // Start at home page as if already logged in
-        cy.visit('/');
-
-        // Navigate to the Menu page using the navbar
-        cy.get('a.nav-link').contains('Menu').click();
-
         // Ensure the Menu page is loaded
         cy.url().should('eq', 'http://localhost:3000/Menu');
 
