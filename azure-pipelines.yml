@@ -100,7 +100,7 @@ stages:
                 # Deploy to Azure App Service using the artifact
                 - task: AzureWebApp@1
                   inputs:
-                    azureSubscription: 'Azure for Students'  # Replace with your Azure subscription name
+                    azureSubscription: 'Resource Manager (Raymond Azure App Service)'  # Replace with your Azure subscription name
                     appName: 'OnlineOrdering'  # Replace with your Azure App Service name
                     package: $(Pipeline.Workspace)/frontend-drop/frontend.zip  # Use the zipped build artifact
                   displayName: 'Deploy to Azure App Service'
