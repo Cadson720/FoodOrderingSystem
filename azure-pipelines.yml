@@ -6,72 +6,101 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-  # Step 1: Install Node.js
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '16.x'
-    displayName: 'Install Node.js'
+stages:
+  - stage: Build  # Build stage
+    displayName: 'Build Stage'
+    jobs:
+      - job: Build
+        displayName: 'Build Job'
+        steps:
+          # Step 1: Install Node.js
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '16.x'
+            displayName: 'Install Node.js'
 
-  # Step 2: Cache Cypress binaries to avoid re-downloading them for every build
-  - task: Cache@2
-    inputs:
-      key: 'cypress-cache-$(Agent.OSArchitecture)-$(Build.SourceVersion)'
-      restoreKeys: 'cypress-cache-$(Agent.OSArchitecture)-'
-      path: $(HOME)/.cache/Cypress
-    displayName: 'Cache Cypress binaries'
+          # Step 2: Cache Cypress binaries to avoid re-downloading them for every build
+          - task: Cache@2
+            inputs:
+              key: 'cypress-cache-$(Agent.OSArchitecture)-$(Build.SourceVersion)'
+              restoreKeys: 'cypress-cache-$(Agent.OSArchitecture)-'
+              path: $(HOME)/.cache/Cypress
+            displayName: 'Cache Cypress binaries'
 
-  # Step 3: Install dependencies in the root directory
-  - script: |
-      npm install
-    displayName: 'Install dependencies in root directory'
+          # Step 3: Install dependencies in the root directory
+          - script: |
+              npm install
+            displayName: 'Install dependencies in root directory'
 
-  # Step 4: Install Cypress binary and set execution permissions
-  - script: |
-      npx cypress install
-      chmod +x ./node_modules/.bin/cypress
-    displayName: 'Install Cypress binary and set permissions'
+          # Step 4: Install Cypress binary and set execution permissions
+          - script: |
+              npx cypress install
+              chmod +x ./node_modules/.bin/cypress
+            displayName: 'Install Cypress binary and set permissions'
 
-  # Step 5: Install frontend dependencies, build the frontend project, and install wait-on
-  - script: |
-      cd frontend
-      npm install
-      npm install wait-on
-      chmod +x ./node_modules/.bin/wait-on
-      npm run build
-    displayName: 'Install frontend dependencies, install wait-on, and build project'
+          # Step 5: Install frontend dependencies, build the frontend project, and install wait-on
+          - script: |
+              cd frontend
+              npm install
+              npm install wait-on
+              chmod +x ./node_modules/.bin/wait-on
+              npm run build
+            displayName: 'Install frontend dependencies, install wait-on, and build project'
 
-  # Step 6: Start the frontend server and wait for it to be ready
-  - script: |
-      cd frontend
-      npm start &
-      npx wait-on http://localhost:3000
-    displayName: 'Start Frontend Server and wait for readiness'
+          # Step 6: Start the frontend server and wait for it to be ready
+          - script: |
+              cd frontend
+              npm start &
+              npx wait-on http://localhost:3000
+            displayName: 'Start Frontend Server and wait for readiness'
 
-  # Step 7: Run Cypress E2E tests in headless mode using Chrome browser
-  - script: |
-      npx cypress install
-      npx cypress verify
-      npx cypress run --headless --browser chrome
-    displayName: 'Run Cypress E2E Tests'
+          # Step 7: Run Cypress E2E tests in headless mode using Chrome browser
+          - script: |
+              npx cypress install
+              npx cypress verify
+              npx cypress run --headless --browser chrome
+            displayName: 'Run Cypress E2E Tests'
 
-  # Step 8: Compile TypeScript files using the tsconfig.json configuration
-  - script: |
-      tsc -p tsconfig.json
-    displayName: 'Compile TypeScript'
+          # Step 8: Compile TypeScript files using the tsconfig.json configuration
+          - script: |
+              tsc -p tsconfig.json
+            displayName: 'Compile TypeScript'
 
-  # Step 9: Package frontend build files into a .zip file for deployment
-  - script: |
-      mkdir -p $(Build.ArtifactStagingDirectory)/frontend
-      cd frontend/build
-      zip -r $(Build.ArtifactStagingDirectory)/frontend.zip .
-    displayName: 'Package frontend build files into a zip file'
+          # Step 9: Package frontend build files into a .zip file for deployment
+          - script: |
+              mkdir -p $(Build.ArtifactStagingDirectory)/frontend
+              cd frontend/build
+              zip -r $(Build.ArtifactStagingDirectory)/frontend.zip .
+            displayName: 'Package frontend build files into a zip file'
 
-  # Step 10: Publish the .zip artifact for use in Release Pipeline
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathToPublish: $(Build.ArtifactStagingDirectory)/frontend.zip  # Path to the .zip file
-      artifactName: 'frontend-drop'  # Name of the artifact
-      publishLocation: 'Container'  # Store artifact in the container
-    displayName: 'Publish Build Artifacts'
+          # Step 10: Publish the .zip artifact for use in Release Pipeline
+          - task: PublishBuildArtifacts@1
+            inputs:
+              pathToPublish: $(Build.ArtifactStagingDirectory)/frontend.zip  # Path to the .zip file
+              artifactName: 'frontend-drop'  # Name of the artifact
+              publishLocation: 'Container'  # Store artifact in the container
+            displayName: 'Publish Build Artifacts'
 
+  # New deployment stage for Azure App Service
+  - stage: Deploy  # Deploy stage
+    displayName: 'Deploy Stage'
+    dependsOn: Build  # This stage depends on the Build stage
+    jobs:
+      - deployment: DeployToAzure
+        displayName: 'Deploy to Azure App Service'
+        environment: 'pro'  # Define the environment (e.g., production)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                # Download the artifact from the build stage
+                - download: current
+                  artifact: 'frontend-drop'
+
+                # Deploy to Azure App Service using the artifact
+                - task: AzureWebApp@1
+                  inputs:
+                    azureSubscription: 'Resource Manager (Raymond Azure App Service)'  # Replace with your Azure subscription name
+                    appName: 'OnlineOrdering'  # Replace with your Azure App Service name
+                    package: $(Pipeline.Workspace)/frontend-drop/frontend.zip  # Use the zipped build artifact
+                  displayName: 'Deploy to Azure App Service'
