@@ -1,3 +1,4 @@
+// frontend/App.js
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Link, useNavigate } from 'react-router-dom';
 import './App.css';
@@ -9,6 +10,8 @@ import MenuItemDetail from './MenuItemDetail'; // Import the detail page for men
 import Cart from './Cart';
 import Order from './Order';
 import OrderDetail from './OrderDetail';
+import RestaurantDashboard from './restaurantDashboard'; // Ensure the file path is correct
+import RestaurantOrderDetail from './restaurantOrderDetail'; // Corrected import name to match component usage
 
 function App() {
     // Initialize sign-in state from localStorage
@@ -21,7 +24,6 @@ function App() {
         localStorage.setItem('isSignedIn', isSignedIn);
     }, [isSignedIn]);
 
-
     return (
         <Router>
             <div className="App">
@@ -29,10 +31,11 @@ function App() {
                     {/* Route to SignIn page */}
                     <Route path="/signin" element={<SignIn setIsSignedIn={setIsSignedIn} />} />
 
-                    {/*
-                        Removed forced redirection to SignIn.
-                        Set the default route to '/Menu' directly.
-                    */}
+                    {/* Restaurant-specific routes with custom header */}
+                    <Route path="/restaurant-dashboard" element={<WithRestaurantHeader><RestaurantDashboard /></WithRestaurantHeader>} />
+                    <Route path="/restaurantOrderDetail/:orderId" element={<WithRestaurantHeader><RestaurantOrderDetail /></WithRestaurantHeader>} />
+
+                    {/* Default route for other pages */}
                     <Route path="/*" element={<Home setIsSignedIn={setIsSignedIn} />} />
                 </Routes>
             </div>
@@ -75,6 +78,43 @@ function Home({ setIsSignedIn }) {
                 <Route path="/Cart" element={<Cart cart={cart} setCart={setCart} />} />
             </Routes>
         </div>
+    );
+}
+
+function RestaurantHeader({ setIsSignedIn }) {
+    const navigate = useNavigate();
+
+    const handleSignOut = () => {
+        setIsSignedIn(false);
+        localStorage.removeItem('isSignedIn'); // Clear sign-in state from localStorage
+        navigate('/signin'); // Redirect to sign-in page after signing out
+    };
+
+    return (
+        <header className="App-header">
+            <nav className="navbar">
+                <Link to="/restaurant-dashboard" className="nav-link">Orders</Link>
+                <button className="signout-button" onClick={handleSignOut}>Sign Out</button>
+            </nav>
+        </header>
+    );
+}
+
+// Higher-order component to include the RestaurantHeader
+function WithRestaurantHeader({ children }) {
+    const [isSignedIn, setIsSignedIn] = useState(() => {
+        return localStorage.getItem('isSignedIn') === 'true';
+    });
+
+    useEffect(() => {
+        localStorage.setItem('isSignedIn', isSignedIn);
+    }, [isSignedIn]);
+
+    return (
+        <>
+            <RestaurantHeader setIsSignedIn={setIsSignedIn} />
+            {children}
+        </>
     );
 }
 
