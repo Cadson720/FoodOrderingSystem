@@ -236,6 +236,75 @@ app.put('/api/orderdetail/:id', (req, res) => {
     res.json({ message: 'Orders updated successfully' });
 });
 
+// New endpoints for order status management
+// These endpoints handle the order status updates
+app.put('/api/orderStatus/:orderId', (req, res) => {
+    const { orderId } = req.params;
+    const { status } = req.body;
+
+    // Validate the status
+    const validStatuses = ['pending', 'confirmed', 'preparing', 'ready', 'delivered', 'cancelled'];
+    if (!validStatuses.includes(status)) {
+        return res.status(400).json({ error: 'Invalid status value' });
+    }
+
+    const query = 'UPDATE orderlist SET status = ? WHERE order_id = ?';
+    
+    db.query(query, [status, orderId], (err, result) => {
+        if (err) {
+            console.error('Error updating order status:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Order not found' });
+        }
+        
+        res.json({ 
+            message: 'Order status updated successfully',
+            status: status
+        });
+    });
+});
+
+// Get current status of an order
+app.get('/api/orderStatus/:orderId', (req, res) => {
+    const { orderId } = req.params;
+    
+    const query = 'SELECT status FROM orderlist WHERE order_id = ?';
+    
+    db.query(query, [orderId], (err, result) => {
+        if (err) {
+            console.error('Error fetching order status:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'Order not found' });
+        }
+        
+        res.json({ 
+            orderId: orderId,
+            status: result[0].status
+        });
+    });
+});
+
+// Get all orders with a specific status
+app.get('/api/orders/status/:status', (req, res) => {
+    const { status } = req.params;
+    
+    const query = 'SELECT * FROM orderlist WHERE status = ?';
+    
+    db.query(query, [status], (err, results) => {
+        if (err) {
+            console.error('Error fetching orders by status:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        
+        res.json(results);
+    });
+});
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
