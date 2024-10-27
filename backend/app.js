@@ -118,8 +118,9 @@ app.post('/api/submit-order', (req, res) => {
         }
 
         const insertOrderQuery = `
-            INSERT INTO orderlist (cart_id, menu_id, quantity)
-            SELECT cart_id, menu_id, quantity FROM cart
+            INSERT INTO orderlist (userid, status)
+            SELECT MAX(id), 'pending'
+            FROM user
         `;
 
         db.query(insertOrderQuery, (insertErr, result) => {
@@ -133,7 +134,7 @@ app.post('/api/submit-order', (req, res) => {
             const updateSohQuery = `
                 UPDATE menu
                 SET SOH = SOH - 1
-                WHERE id IN (SELECT menu_id FROM cart)
+                WHERE id IN (SELECT item_id FROM orderdetail)
                   AND SOH > 0  -- To prevent negative SOH
             `;
 
