@@ -1,7 +1,7 @@
 // frontend/SignIn.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Import axios
+import axios from 'axios';
 import './SignIn.css';
 
 function SignIn({ setIsSignedIn }) {
@@ -11,6 +11,11 @@ function SignIn({ setIsSignedIn }) {
     const [generatedCode, setGeneratedCode] = useState('');
     const [timer, setTimer] = useState(60);
     const [isCodeSent, setIsCodeSent] = useState(false);
+
+    const [restaurantEmail, setRestaurantEmail] = useState('');
+    const [restaurantPassword, setRestaurantPassword] = useState('');
+    const [restaurantError, setRestaurantError] = useState('');
+
     const navigate = useNavigate();
 
     // Validate Email Format
@@ -69,6 +74,28 @@ function SignIn({ setIsSignedIn }) {
         }
     };
 
+    // Handle Restaurant Login
+    const handleRestaurantLogin = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await axios.post('http://localhost:3001/api/restaurant/login', {
+                email: restaurantEmail,
+                password: restaurantPassword,
+            });
+
+            if (response.data.success) {
+                setIsSignedIn(true);
+                localStorage.setItem('isSignedIn', 'true');
+                navigate('/restaurant-dashboard'); // Redirect to restaurant dashboard
+            } else {
+                setRestaurantError('Invalid email or password.');
+            }
+        } catch (err) {
+            console.error('Error during restaurant login:', err);
+            setRestaurantError('Failed to login. Please try again.');
+        }
+    };
+
     // Timer countdown
     useEffect(() => {
         let countdown;
@@ -90,6 +117,7 @@ function SignIn({ setIsSignedIn }) {
         <div className="signin-container">
             <div className="signin-card">
                 <h1 className="signin-title">Sydney Burgers</h1>
+                {/* User Login */}
                 {!isCodeSent ? (
                     <form className="signin-form" onSubmit={handleSignIn}>
                         <div className="form-group">
@@ -122,6 +150,35 @@ function SignIn({ setIsSignedIn }) {
                         <button type="submit" className="signin-button">VERIFY CODE</button>
                     </form>
                 )}
+
+                {/* Restaurant Login */}
+                <div className="restaurant-login">
+                    <h2>Restaurant User Login</h2>
+                    <form className="signin-form" onSubmit={handleRestaurantLogin}>
+                        <div className="form-group">
+                            <label>Email Address:</label>
+                            <input
+                                type="email"
+                                value={restaurantEmail}
+                                onChange={(e) => setRestaurantEmail(e.target.value)}
+                                placeholder="Enter restaurant email"
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Password:</label>
+                            <input
+                                type="password"
+                                value={restaurantPassword}
+                                onChange={(e) => setRestaurantPassword(e.target.value)}
+                                placeholder="Enter password"
+                                required
+                            />
+                        </div>
+                        {restaurantError && <p className="error-message">{restaurantError}</p>}
+                        <button type="submit" className="signin-button">LOGIN</button>
+                    </form>
+                </div>
             </div>
         </div>
     );

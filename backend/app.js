@@ -118,8 +118,9 @@ app.post('/api/submit-order', (req, res) => {
         }
 
         const insertOrderQuery = `
-            INSERT INTO orderlist (cart_id, menu_id, quantity)
-            SELECT cart_id, menu_id, quantity FROM cart
+            INSERT INTO orderlist (userid, status)
+            SELECT MAX(id), 'pending'
+            FROM user
         `;
 
         db.query(insertOrderQuery, (insertErr, result) => {
@@ -133,7 +134,7 @@ app.post('/api/submit-order', (req, res) => {
             const updateSohQuery = `
                 UPDATE menu
                 SET SOH = SOH - 1
-                WHERE id IN (SELECT menu_id FROM cart)
+                WHERE id IN (SELECT item_id FROM orderdetail)
                   AND SOH > 0  -- To prevent negative SOH
             `;
 
@@ -308,4 +309,153 @@ app.get('/api/orders/status/:status', (req, res) => {
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
+});
+
+// Restaurant login route
+app.post('/api/restaurant/login', (req, res) => {
+    const { email, password } = req.body;
+    const query = 'SELECT * FROM restaurant_user WHERE email = ? AND password = ?';
+
+    db.query(query, [email, password], (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        if (results.length > 0) {
+            res.json({ success: true, message: 'Login successful' });
+        } else {
+            res.json({ success: false, message: 'Invalid email or password' });
+        }
+    });
+});
+
+app.get('/api/orders', (req, res) => {
+    const query = `
+        SELECT 
+            od.order_id,
+            u.Username AS user_name,
+            m.item_name,
+            od.quantity,
+            o.status,
+            o.createDate,
+            od.instructions
+        FROM 
+            orderdetail od
+        JOIN 
+            orderlist o ON od.order_id = o.order_id
+        JOIN 
+            user u ON o.userid = u.id
+        JOIN 
+            menu m ON o.menu_id = m.id
+        ORDER BY 
+            o.createDate DESC
+    `;
+
+    db.query(query, (err, results) => {
+        if (err) {
+            console.error('Error fetching orders:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        res.json(results);
+    });
+});
+
+// Route to update the status of an order
+app.put('/api/order/update-status/:orderId', (req, res) => {
+    const { orderId } = req.params;
+    const { status } = req.body;
+
+    const validStatuses = ['pending', 'confirmed', 'preparing', 'ready', 'delivered', 'cancelled'];
+    if (!validStatuses.includes(status)) {
+        return res.status(400).json({ error: 'Invalid status value' });
+    }
+
+    const query = 'UPDATE orderlist SET status = ? WHERE order_id = ?';
+    
+    db.query(query, [status, orderId], (err, result) => {
+        if (err) {
+            console.error('Error updating order status:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: 'Order not found' });
+        }
+        
+        res.json({ 
+            message: 'Order status updated successfully',
+            status: status
+        });
+    });
+});
+
+app.get('/api/orderdetail/:orderid', (req, res) => {
+    const { orderid } = req.params;
+    const query = `
+        SELECT 
+            od.order_id, od.price, od.quantity, od.subtotal, od.shipping_address, od.instructions,
+            o.status, o.createDate,
+            u.Username, u.Email, u.PhoneNumber, u.Address, u.RegistrationDate,
+            m.item_name
+        FROM 
+            orderdetail od
+        JOIN 
+            orderlist o ON od.order_id = o.order_id
+        JOIN 
+            user u ON o.userid = u.id
+        JOIN 
+            menu m ON o.menu_id = m.id
+        WHERE 
+            od.order_id = ?
+    `;
+
+    db.query(query, [orderid], (err, results) => {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'Order not found' });
+        }
+        res.json(results[0]); // Return only the first result as there should be one order
+    });
+});
+
+app.get('/api/orderdetailwithuser/:orderId', (req, res) => {
+    const { orderId } = req.params;
+
+    const query = `
+        SELECT 
+            o.order_id,
+            o.quantity,
+            o.status,
+            o.createDate,
+            od.price,
+            od.subtotal,
+            od.shipping_address,
+            od.instructions,
+            u.Username AS user_name,
+            u.Email AS user_email,
+            u.PhoneNumber AS user_phone
+        FROM 
+            orderlist o
+        JOIN 
+            orderdetail od ON o.order_id = od.order_id
+        JOIN 
+            user u ON o.userid = u.id
+        WHERE 
+            o.order_id = ?;
+    `;
+
+    db.query(query, [orderId], (err, results) => {
+        if (err) {
+            console.error('Error fetching order details with user info:', err);
+            return res.status(500).json({ error: 'Database error' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'Order not found' });
+        }
+
+        res.json(results[0]); // Sending the first result as we expect a single order detail
+    });
 });
