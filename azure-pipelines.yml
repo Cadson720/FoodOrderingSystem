@@ -82,13 +82,13 @@ stages:
             displayName: 'Publish Build Artifacts'
 
   # New deployment stage for Azure App Service
-  - stage: Deploy  # Deploy stage
+  - stage: Deploy
     displayName: 'Deploy Stage'
-    dependsOn: Build  # This stage depends on the Build stage
+    dependsOn: Build
     jobs:
       - deployment: DeployToAzure
         displayName: 'Deploy to Azure App Service'
-        environment: 'pro'  # Define the environment (e.g., production)
+        environment: 'pro'
         strategy:
           runOnce:
             deploy:
@@ -100,7 +100,7 @@ stages:
                 # Deploy to Azure App Service using the artifact
                 - task: AzureWebApp@1
                   inputs:
-                    azureSubscription: 'Resource Manager (Raymond Azure App Service)'  # Replace with your Azure subscription name
-                    appName: 'OnlineOrdering'  # Replace with your Azure App Service name
-                    package: $(Pipeline.Workspace)/frontend-drop/frontend.zip  # Use the zipped build artifact
+                    azureSubscription: 'Resource Manager (Raymond Azure App Service)'
+                    appName: 'OnlineOrdering'
+                    package: $(Pipeline.Workspace)/frontend-drop/frontend.zip
                   displayName: 'Deploy to Azure App Service'
