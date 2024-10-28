@@ -103,64 +103,6 @@ app.post('/api/menu', (req, res) => {
     });
 });
 
-/// API to transfer cart data to orderlist and update SOH in the menu table
-app.post('/api/submit-order', (req, res) => {
-    // Immediately send response back to frontend with the message
-    res.json({
-        message: 'Order has been submitted. Please enter your payment detail at the next page.'
-    });
-
-    // Continue with the transaction to handle the order submission
-    db.beginTransaction((transactionErr) => {
-        if (transactionErr) {
-            console.error('Error starting transaction:', transactionErr);
-            return;
-        }
-
-        const insertOrderQuery = `
-            INSERT INTO orderlist (userid, status)
-            SELECT MAX(id), 'pending'
-            FROM user
-        `;
-
-        db.query(insertOrderQuery, (insertErr, result) => {
-            if (insertErr) {
-                console.error('Error inserting order:', insertErr);
-                return db.rollback(() => {
-                    console.error('Transaction rollback due to order insert error');
-                });
-            }
-
-            const updateSohQuery = `
-                UPDATE menu
-                SET SOH = SOH - 1
-                WHERE id IN (SELECT item_id FROM orderdetail)
-                  AND SOH > 0  -- To prevent negative SOH
-            `;
-
-            db.query(updateSohQuery, (updateErr, updateResult) => {
-                if (updateErr) {
-                    console.error('Error updating SOH:', updateErr);
-                    return db.rollback(() => {
-                        console.error('Transaction rollback due to SOH update error');
-                    });
-                }
-
-                db.commit((commitErr) => {
-                    if (commitErr) {
-                        console.error('Error committing transaction:', commitErr);
-                        return db.rollback(() => {
-                            console.error('Transaction rollback due to commit error');
-                        });
-                    }
-                    console.log('Order submitted and SOH updated successfully');
-                });
-            });
-        });
-    });
-});
-
-
 app.get('/api/orderlist', (req, res) => {
     const query = 'SELECT * FROM orderlist';
     db.query(query, (err, results) => {
@@ -457,5 +399,49 @@ app.get('/api/orderdetailwithuser/:orderId', (req, res) => {
         }
 
         res.json(results[0]); // Sending the first result as we expect a single order detail
+    });
+});
+
+// submit order in cart page, transfer data from cart to order
+app.post('/api/submit-order', (req, res) => {
+    const { cart, userId, shippingAddress, instructions } = req.body; // Assuming userId and shippingAddress are also passed
+
+    if (!cart || cart.length === 0) {
+        return res.status(400).json({ error: 'Cart is empty' });
+    }
+
+    // new orderlist in database
+    const orderQuery = 'INSERT INTO orderlist (userid, createDate, status) VALUES (?, NOW(), "pending")';
+
+    db.query(orderQuery, [userId], (err, orderResult) => {
+        if (err) {
+            console.error('Error creating order:', err);
+            return res.status(500).json({ error: 'Database error creating order' });
+        }
+
+        const orderId = orderResult.insertId; // Get the newly created order ID
+
+        // new orderdetail
+        const orderDetailsQuery = `
+            INSERT INTO orderdetail (order_id, price, quantity, subtotal, shipping_address, instructions)
+            VALUES ?`;
+        
+        const orderDetailsData = cart.map(item => [
+            orderId,
+            item.price,
+            item.quantity,
+            item.price * item.quantity,
+            shippingAddress,
+            instructions
+        ]);
+
+        db.query(orderDetailsQuery, [orderDetailsData], (err, detailResult) => {
+            if (err) {
+                console.error('Error creating order details:', err);
+                return res.status(500).json({ error: 'Database error creating order details' });
+            }
+
+            res.json({ message: 'Order submitted successfully!', orderId });
+        });
     });
 });

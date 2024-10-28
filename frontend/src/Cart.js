@@ -17,9 +17,16 @@ function Cart({ cart, setCart }) {
             alert("Your cart is empty!");
             return;
         }
-
+    
+        const orderData = {
+            cart,
+            userId: 2460,  // default  id
+            shippingAddress: "Guangzhou", // default address
+            instructions: "Please write insructions"
+        };
+    
         // Submit the cart items as an order to the backend
-        axios.post('http://localhost:3001/api/submit-order', { cart })
+        axios.post('http://localhost:3001/api/submit-order', orderData)
             .then(response => {
                 console.log('Order submitted successfully!', response.data);
                 setCart([]);  // Clear the cart after order submission

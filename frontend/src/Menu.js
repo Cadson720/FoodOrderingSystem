@@ -77,6 +77,9 @@ function Menu({ cart, setCart }) {
                     className="menu-search"
                 />
 
+                {/* Display the number of items found */}
+                <p>{filteredItems.length} items found</p>
+
                 {/* Loop through the categories dynamically */}
                 {Object.keys(categorizedItems).length > 0 ? (
                     Object.keys(categorizedItems).map((category) => (
