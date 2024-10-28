@@ -77,6 +77,7 @@ function Payment() {
                     />
                     {validFields.cardNumber && <span className="checkmark">&#10003;</span>}
                     {errors.cardNumber && <p className="error-message">{errors.cardNumber}</p>}
+
                 </div>
                 <div className="form-group">
                     <label htmlFor="expiryDate">Expiry Date (MM/YY):</label>
