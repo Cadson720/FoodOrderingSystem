@@ -45,11 +45,9 @@ function Payment() {
             axios.post('http://localhost:3001/api/submit-order')
                 .then(response => {
                     console.log(response.data.message);
-                    alert('Order has been successfully created from cart!');
                 })
                 .catch(error => {
                     console.error('Error creating order:', error);
-                    alert('An error occurred while creating the order.');
                 });
 
             alert('Payment submitted!');
@@ -65,6 +63,7 @@ function Payment() {
         <div className="payment-container">
             <h1 className="payment-title">Payment</h1>
             <p className="payment-description">Please enter your credit card information below.</p>
+            <p className="payment-description">Your order has been created when you submitted order from the cart. Payment can be done on this page or at the counter.</p>
             <form onSubmit={handleSubmit} className="payment-form">
                 <div className="form-group">
                     <label htmlFor="cardNumber">Credit Card Number:</label>
