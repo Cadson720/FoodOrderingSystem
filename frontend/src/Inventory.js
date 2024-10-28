@@ -1,13 +1,11 @@
-// src/Inventory.js
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 function Inventory() {
     const [menuItems, setMenuItems] = useState([]);
-    const [editingItemId, setEditingItemId] = useState(null);  // 当前编辑的项ID
-    const [editedItem, setEditedItem] = useState({});  // 当前编辑的项内容
-    const [isAddingNew, setIsAddingNew] = useState(false);  // 是否正在添加新项
+    const [editingItemId, setEditingItemId] = useState(null);
+    const [editedItem, setEditedItem] = useState({});
+    const [isAddingNew, setIsAddingNew] = useState(false);
 
     useEffect(() => {
         fetchMenuItems();
@@ -33,13 +31,13 @@ function Inventory() {
     // Add
     const handleAddItem = () => {
         setIsAddingNew(true);
-        setEditedItem({ item_name: '', description: '', price: '', category: '', SOH: '' });  // 初始化新项
+        setEditedItem({ item_name: '', description: '', price: '', category: '', SOH: '' });
     };
 
     // Validate
     const validateInput = (item) => {
-        if (!item.item_name || !item.category || item.SOH === '') {
-            return "Item name, category, and stock on hand are required.";
+        if (!item.item_name || !item.category || item.SOH === '' || !item.description || item.price == '') {
+            return "Item name, description, price, category, and stock on hand are required.";
         }
         if (isNaN(item.price) || parseFloat(item.price) <= 0) {
             return "Price must be a valid number greater than 0.";
