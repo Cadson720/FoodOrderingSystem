@@ -34,6 +34,7 @@ function App() {
                     {/* Restaurant-specific routes with custom header */}
                     <Route path="/restaurant-dashboard" element={<WithRestaurantHeader><RestaurantDashboard /></WithRestaurantHeader>} />
                     <Route path="/restaurantOrderDetail/:orderId" element={<WithRestaurantHeader><RestaurantOrderDetail /></WithRestaurantHeader>} />
+                    <Route path="/restaurant-inventory" element={<WithRestaurantHeader><Inventory /></WithRestaurantHeader>} />
 
                     {/* Default route for other pages */}
                     <Route path="/*" element={<Home setIsSignedIn={setIsSignedIn} />} />
@@ -56,8 +57,7 @@ function Home({ setIsSignedIn }) {
                         <Link to="/" className="nav-link">Home</Link> |
                         <Link to="/Menu" className="nav-link">Menu</Link> |
                         <Link to="/Payment" className="nav-link">Payment</Link> |
-                        <Link to="/Orders" className="nav-link">Order</Link> |
-                        <Link to="/Inventory" className="nav-link">Inventory</Link>
+                        <Link to="/Orders" className="nav-link">Order</Link>
                     </div>
                     <Link to="/Cart" className="nav-link cart-link">Cart</Link>
                     <SignOutButton setIsSignedIn={setIsSignedIn} />
@@ -68,7 +68,6 @@ function Home({ setIsSignedIn }) {
             <Routes>
                 <Route path="/" element={<Navigate to="/Menu" />} /> {/* Redirect Home to Menu */}
                 <Route path="/Payment" element={<Payment />} />
-                <Route path="/Inventory" element={<Inventory />} />
                 <Route path="/Orders" element={<Order />} />
                 <Route path="/OrderDetail/:orderId/:method" element={<OrderDetail />} />
                 <Route path="/menu/:itemId" element={<MenuItemDetail />} />
@@ -93,7 +92,8 @@ function RestaurantHeader({ setIsSignedIn }) {
     return (
         <header className="App-header">
             <nav className="navbar">
-                <Link to="/restaurant-dashboard" className="nav-link">Orders</Link>
+                <Link to="/restaurant-dashboard" className="nav-link">Orders</Link> |
+                <Link to="/restaurant-inventory" className="nav-link">Inventory</Link>
                 <button className="signout-button" onClick={handleSignOut}>Sign Out</button>
             </nav>
         </header>
