@@ -78,7 +78,6 @@ function Menu({ cart, setCart }) {
                 />
 
                 {/* Display the number of items found */}
-                <p>{filteredItems.length} items found</p>
 
                 {/* Loop through the categories dynamically */}
                 {Object.keys(categorizedItems).length > 0 ? (
@@ -89,15 +88,11 @@ function Menu({ cart, setCart }) {
                                 {categorizedItems[category].map(item => (
                                     <li key={item.id} className="menu-item">
                                         <button onClick={() => handleItemClick(item.id)} className="menu-item-button">
-                                            <img
-                                                src={`/images/${item.item_name.toLowerCase().replace(/\s/g, '-')}.jpg`}
-                                                alt={item.item_name}
-                                                className="item-image"
-                                            />
                                             <span className="item-name">{item.item_name}</span>
+                                            <br />
                                             <span className="item-price">${parseFloat(item.price).toFixed(2)}</span>
                                         </button>
-                                        <button onClick={() => addToCart(item)}>+</button>
+                                        <button onClick={() => addToCart(item)}>Add to Cart</button>
                                     </li>
                                 ))}
                             </ul>
