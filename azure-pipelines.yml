@@ -97,6 +97,7 @@ stages:
                 - download: current
                   artifact: 'frontend-drop'
 
+
                 # Deploy to Azure App Service using the artifact
                 - task: AzureWebApp@1
                   inputs:
